@@ -32,14 +32,36 @@ export function SkillsModal() {
   const [isOpen, setOpen] = useAtom(skillsModalOpenAtom);
   const [skills, setSkills] = useAtom(skillsAtom);
 
-  const form = useForm<z.infer<typeof skillsSchema>>({
-    resolver: zodResolver(skillsSchema),
-    defaultValues: skills,
+  const form = useForm<{ skillsInput: string }>({
+    resolver: zodResolver(z.object({
+      skillsInput: z.string().min(1, "At least one skill is required")
+    })),
+    defaultValues: {
+      skillsInput: skills.join(", ")
+    },
   });
 
-  function onSubmit(values: z.infer<typeof skillsSchema>) {
-    setSkills(values);
-    setOpen(false);
+  function onSubmit(data: { skillsInput: string }) {
+    try {
+      const parsedSkills = data.skillsInput
+        .split(",")
+        .map(skill => skill.trim())
+        .filter(skill => skill.length > 0);
+      
+      // Validate against the original schema
+      const validatedSkills = skillsSchema.parse(parsedSkills);
+      setSkills(validatedSkills);
+      setOpen(false);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        error.errors.forEach((err) => {
+          form.setError("skillsInput", {
+            type: "manual",
+            message: err.message
+          });
+        });
+      }
+    }
   }
 
   return (
@@ -56,22 +78,15 @@ export function SkillsModal() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
               control={form.control}
-              name="0" // Temporary field for input
-              render={({}) => (
+              name="skillsInput"
+              render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-gray-700">Skills</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="e.g., Communication, Sales, CRM Software"
                       className="focus:ring-blue-500"
-                      value={skills.join(", ")}
-                      onChange={(e) => {
-                        const newSkills = e.target.value
-                          .split(",")
-                          .map((skill) => skill.trim())
-                          .filter((skill) => skill.length > 0);
-                        form.setValue("0", newSkills.join(", "));
-                      }}
+                      {...field}
                     />
                   </FormControl>
                   <FormMessage className="text-red-500" />

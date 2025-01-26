@@ -15,7 +15,7 @@ export const resumes = pgTable("resumes", {
   title: varchar("title", { length: 100 }).default("Untitled Resume"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
-  templateId: text("template_id").notNull(),
+  templateId: text("template_id"),
 });
 
 export const resumeRelations = relations(resumes, ({ many }) => ({
