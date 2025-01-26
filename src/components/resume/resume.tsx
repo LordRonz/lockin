@@ -4,6 +4,17 @@ import { ContactModal } from "./sections/contact-section";
 import React from "react";
 import { contactDataAtom, contactModalOpenAtom } from "@/lib/store/contact";
 import { useAtom } from "jotai";
+import {
+  educationAtom,
+  educationModalOpenAtom,
+  experienceModalOpenAtom,
+  experiencesAtom,
+  skillsAtom,
+  skillsModalOpenAtom,
+} from "@/lib/store/resume";
+import { ExperienceModal } from "./sections/experience-modal";
+import { EducationModal } from "./sections/education-modal";
+import { SkillsModal } from "./sections/skills-modal";
 
 interface ResumeSectionProps {
   title?: string;
@@ -65,13 +76,15 @@ export const ResumeComponent = ({
 }: {
   ref?: RefObject<HTMLDivElement | null>;
 }) => {
-  const handleSectionClick = (sectionName: string) => {
-    console.log(`Section clicked: ${sectionName}`);
-    // Add your custom click handler logic here
-  };
   const [contactData] = useAtom(contactDataAtom);
+  const [experiences] = useAtom(experiencesAtom);
+  const [education] = useAtom(educationAtom);
+  const [skills] = useAtom(skillsAtom);
 
   const [, setContactModalOpen] = useAtom(contactModalOpenAtom);
+  const [, setExperienceModalOpen] = useAtom(experienceModalOpenAtom);
+  const [, setEducationModalOpen] = useAtom(educationModalOpenAtom);
+  const [, setSkillsModalOpen] = useAtom(skillsModalOpenAtom);
 
   const contactInfo = [
     contactData.phone,
@@ -101,48 +114,30 @@ export const ResumeComponent = ({
 
       <ResumeSection
         title="Experience"
-        onClick={() => handleSectionClick("Experience")}
+        onClick={() => setExperienceModalOpen(true)}
       >
-        <ExperienceItem
-          company="Company A"
-          location="Location"
-          position="Sales Representative"
-          dates="Start - End date"
-        >
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Key responsibility or accomplishment 1</li>
-            <li>Quantifiable achievement (e.g., Increased sales by 30%)</li>
-            <li>AI-generated work description based on experience</li>
-          </ul>
-        </ExperienceItem>
-
-        <ExperienceItem
-          company="Company B"
-          location="Location"
-          position="Sales Associate"
-          dates="Start - End date"
-        >
-          <p>sdald</p>
-        </ExperienceItem>
-
-        <ExperienceItem
-          company="Company C"
-          location="Location"
-          position="Sales Assistant"
-          dates="Start - End date"
-        >
-          <p>sdald</p>
-        </ExperienceItem>
+        {experiences.map((exp, index) => (
+          <ExperienceItem
+            key={index}
+            company={exp.company}
+            location={exp.location}
+            position={exp.position}
+            dates={exp.dates}
+          >
+            <ul className="list-disc pl-6 space-y-2">
+              {exp.description.split("\n").map((line, i) => (
+                <li key={i}>{line}</li>
+              ))}
+            </ul>
+          </ExperienceItem>
+        ))}
       </ResumeSection>
 
-      <ResumeSection
-        title="Skills"
-        onClick={() => handleSectionClick("Skills")}
-      >
+      <ResumeSection title="Skills" onClick={() => setSkillsModalOpen(true)}>
         <div className="flex flex-wrap gap-4">
-          {["Skill 1", "Skill 2", "Skill 3", "Skill 4"].map((skill) => (
+          {skills.map((skill, index) => (
             <span
-              key={skill}
+              key={index}
               className="px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm"
             >
               {skill}
@@ -153,20 +148,27 @@ export const ResumeComponent = ({
 
       <ResumeSection
         title="Education"
-        onClick={() => handleSectionClick("Education")}
+        onClick={() => setEducationModalOpen(true)}
       >
         <div className="flex justify-between items-start">
           <div>
-            <h3 className="font-medium text-gray-900">Graduated School</h3>
-            <p className="text-gray-700">Field of study</p>
+            <h3 className="font-medium text-gray-900">
+              {education.institution}
+            </h3>
+            <p className="text-gray-700">
+              {education.degree} in {education.field}
+            </p>
           </div>
           <div className="text-right">
-            <p className="text-gray-600">Location</p>
-            <p className="text-sm text-gray-500">Graduation Date</p>
+            <p className="text-gray-600">{education.location}</p>
+            <p className="text-sm text-gray-500">{education.dates}</p>
           </div>
         </div>
       </ResumeSection>
       <ContactModal />
+      <ExperienceModal />
+      <EducationModal />
+      <SkillsModal />
     </div>
   );
 };
