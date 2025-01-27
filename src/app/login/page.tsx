@@ -7,7 +7,7 @@ import { Separator } from "@/components/ui/separator"
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-slate-50 to-slate-100 p-4">
       <Card className="w-full max-w-md shadow-lg rounded-2xl">
         <CardHeader className="space-y-1">
           <CardTitle className="text-3xl font-bold text-slate-800">Welcome Back</CardTitle>

@@ -26,7 +26,7 @@ const ResumeSection = ({ title, children, onClick }: ResumeSectionProps) => (
   <section
     className="group p-6 bg-white shadow-sm transition-all
                hover:shadow-md hover:border-l-4 hover:border-blue-200
-               cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300"
+               cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-blue-300"
     tabIndex={0}
     onClick={onClick}
   >
