@@ -22,7 +22,7 @@
     "clsx": "^2.1.1",
     "dotenv": "^16.4.7",
     "drizzle-orm": "^0.38.4",
-    "html2canvas": "^1.4.1",
+    "html2canvas-pro": "^1.5.8",
     "jotai": "^2.11.1",
     "jspdf": "^2.5.2",
     "lucide-react": "^0.474.0",

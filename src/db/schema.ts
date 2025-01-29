@@ -64,6 +64,12 @@ export const skills = pgTable("skills", {
   level: text("level"),
 });
 
+export const summary = pgTable("summary", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  resumeId: uuid("resume_id").notNull(),
+  text: text("text").notNull(),
+});
+
 export const templates = pgTable("templates", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull(),
