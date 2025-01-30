@@ -80,7 +80,11 @@ export default function Home() {
           <div className="grid md:grid-cols-2 gap-8 justify-items-center">
             {TESTIMONIALS.map((testimonial) => (
               <Card key={testimonial.name} className="p-8 max-w-md w-full">
-                <p className="text-gray-600 mb-4">{'"'}{testimonial.text}{'"'}</p>
+                <p className="text-gray-600 mb-4">
+                  {'"'}
+                  {testimonial.text}
+                  {'"'}
+                </p>
                 <div className="flex items-center gap-4">
                   <div className="h-12 w-12 rounded-full bg-gray-100"></div>
                   <div>
@@ -109,7 +113,7 @@ export default function Home() {
 
       <footer className="border-t w-full">
         <div className="max-w-7xl mx-auto px-4 py-8 text-center text-gray-600">
-          © 2024 Lockin. All rights reserved.
+          © {new Date().getFullYear()} Lockin. All rights reserved.
         </div>
       </footer>
     </div>
