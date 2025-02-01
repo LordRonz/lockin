@@ -24,9 +24,9 @@ interface ResumeSectionProps {
 
 const ResumeSection = ({ title, children, onClick }: ResumeSectionProps) => (
   <section
-    className="group p-4 shadow-sm transition-all
-               hover:shadow-md hover:bg-neutral-200
-               cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-blue-300"
+    className="group p-4 transition-all
+               hover:shadow-md 
+               cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-blue-300 hover:ring-orange-200 hover:ring-2 rounded-lg"
     tabIndex={0}
     onClick={onClick}
   >
@@ -97,95 +97,93 @@ export const ResumeComponent = ({
       ref={ref}
       className="max-w-3xl mx-auto my-8 p-4 bg-neutral-50 rounded-4xl"
     >
-      <div className="rounded-[20px] overflow-clip border-2 border-neutral-300">
-        <ResumeSection onClick={() => setContactModalOpen(true)}>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            {contactData.fullName}
-          </h1>
-          <div className="flex flex-wrap items-center gap-x-4 text-gray-600">
-            {contactInfo.map((info, index) => (
-              <React.Fragment key={index}>
-                <span>{info}</span>
-                {index < contactInfo.length - 1 && (
-                  <span className="text-gray-400">·</span>
-                )}
-              </React.Fragment>
-            ))}
-          </div>
-        </ResumeSection>
-
-        <ResumeSection title="Summary">
-          <p>
-            Product Designer with a strong foundation in Software Development,
-            currently working as a junior product designer at Apple Developer
-            Academy @Binus. My Software Development background has sharpened my
-            analytical thinking, and attention to detail in the context of
-            collaboration, which I apply to crafting intuitive, user-centered
-            design while achieving developer friendly innovations. With passion
-            in design and experience in UI/UX design and problem-solving, I am
-            seeking opportunities to further my expertise or contribute as a
-            Product Designer building solutions to actual real world problems.
-          </p>
-        </ResumeSection>
-
-        <ResumeSection
-          title="Experience"
-          onClick={() => setExperienceModalOpen(true)}
-        >
-          {experiences.map((exp, index) => (
-            <ExperienceItem
-              key={index}
-              company={exp.company}
-              location={exp.location}
-              position={exp.position}
-              dates={exp.dates}
-            >
-              <ul className="list-disc pl-6 space-y-2">
-                {exp.description.split("\n").map((line, i) => (
-                  <li key={i}>{line}</li>
-                ))}
-              </ul>
-            </ExperienceItem>
+      <ResumeSection onClick={() => setContactModalOpen(true)}>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          {contactData.fullName}
+        </h1>
+        <div className="flex flex-wrap items-center gap-x-4 text-gray-600">
+          {contactInfo.map((info, index) => (
+            <React.Fragment key={index}>
+              <span>{info}</span>
+              {index < contactInfo.length - 1 && (
+                <span className="text-gray-400">·</span>
+              )}
+            </React.Fragment>
           ))}
-        </ResumeSection>
+        </div>
+      </ResumeSection>
 
-        <ResumeSection title="Skills" onClick={() => setSkillsModalOpen(true)}>
-          <div className="flex flex-wrap gap-4">
-            {skills.map((skill, index) => (
-              <span
-                key={index}
-                className="px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm"
-              >
-                {skill}
-              </span>
-            ))}
-          </div>
-        </ResumeSection>
+      <ResumeSection title="Summary">
+        <p>
+          Product Designer with a strong foundation in Software Development,
+          currently working as a junior product designer at Apple Developer
+          Academy @Binus. My Software Development background has sharpened my
+          analytical thinking, and attention to detail in the context of
+          collaboration, which I apply to crafting intuitive, user-centered
+          design while achieving developer friendly innovations. With passion in
+          design and experience in UI/UX design and problem-solving, I am
+          seeking opportunities to further my expertise or contribute as a
+          Product Designer building solutions to actual real world problems.
+        </p>
+      </ResumeSection>
 
-        <ResumeSection
-          title="Education"
-          onClick={() => setEducationModalOpen(true)}
-        >
-          <div className="flex justify-between items-start">
-            <div>
-              <h3 className="font-medium text-gray-900">
-                {education.institution}
-              </h3>
-              <p className="text-gray-700">
-                {education.degree} in {education.field}
-              </p>
-            </div>
-            <div className="text-right">
-              <p className="text-gray-600">{education.location}</p>
-              <p className="text-sm text-gray-500">{education.dates}</p>
-            </div>
+      <ResumeSection
+        title="Experience"
+        onClick={() => setExperienceModalOpen(true)}
+      >
+        {experiences.map((exp, index) => (
+          <ExperienceItem
+            key={index}
+            company={exp.company}
+            location={exp.location}
+            position={exp.position}
+            dates={exp.dates}
+          >
+            <ul className="list-disc pl-6 space-y-2">
+              {exp.description.split("\n").map((line, i) => (
+                <li key={i}>{line}</li>
+              ))}
+            </ul>
+          </ExperienceItem>
+        ))}
+      </ResumeSection>
+
+      <ResumeSection title="Skills" onClick={() => setSkillsModalOpen(true)}>
+        <div className="flex flex-wrap gap-4">
+          {skills.map((skill, index) => (
+            <span
+              key={index}
+              className="px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm"
+            >
+              {skill}
+            </span>
+          ))}
+        </div>
+      </ResumeSection>
+
+      <ResumeSection
+        title="Education"
+        onClick={() => setEducationModalOpen(true)}
+      >
+        <div className="flex justify-between items-start">
+          <div>
+            <h3 className="font-medium text-gray-900">
+              {education.institution}
+            </h3>
+            <p className="text-gray-700">
+              {education.degree} in {education.field}
+            </p>
           </div>
-        </ResumeSection>
-        <ContactModal />
-        <ExperienceModal />
-        <EducationModal />
-        <SkillsModal />
-      </div>
+          <div className="text-right">
+            <p className="text-gray-600">{education.location}</p>
+            <p className="text-sm text-gray-500">{education.dates}</p>
+          </div>
+        </div>
+      </ResumeSection>
+      <ContactModal />
+      <ExperienceModal />
+      <EducationModal />
+      <SkillsModal />
     </div>
   );
 };
