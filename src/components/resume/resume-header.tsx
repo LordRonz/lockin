@@ -1,9 +1,9 @@
-import { Button } from "@/components/ui/button"
-import { Download, LayoutTemplate, Settings } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import { Download, LayoutTemplate, Settings } from "lucide-react";
 
 export function ResumeHeader() {
   return (
-    <header className="flex items-center justify-between border-b px-6 py-3">
+    <header className="sticky top-0 bg-white shadow flex items-center justify-between border-b px-6 py-3">
       <h1 className="text-2xl font-semibold">My Resume</h1>
       <div className="flex items-center gap-2">
         <Button variant="outline" size="sm">
@@ -20,6 +20,5 @@ export function ResumeHeader() {
         </Button>
       </div>
     </header>
-  )
+  );
 }
-

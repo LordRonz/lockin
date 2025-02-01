@@ -6,7 +6,7 @@ export default function ResumePage() {
   return (
     <div className="flex h-screen">
       <main className="flex-1 overflow-auto">
-        <ResumeHeader />
+        <ResumeHeader />  
         <ResumeEditor />
       </main>
       <ResumeSidebar />

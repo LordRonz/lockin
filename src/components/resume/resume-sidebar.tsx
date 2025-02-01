@@ -1,38 +1,62 @@
-import { Button } from "@/components/ui/button"
-import { Progress } from "@/components/ui/progress"
-import { FileText, GraduationCap, Briefcase, Award } from "lucide-react"
+"use client";
 
-export function ResumeSidebar() {
+import React from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+
+export const ResumeSidebar = () => {
+  const menuItems = ["Title", "Summary", "Experience", "Skills", "Education"];
+  const actionItems = [
+    "Download",
+    "Share",
+    "Create Cover Letter",
+    "Apply Job Link",
+  ];
+
+  const handleMenuClick = (item: string) => {
+    console.log(`${item} clicked`);
+  };
+
+  const handleActionClick = (action: string) => {
+    console.log(`${action} clicked`);
+  };
+
   return (
-    <div className="w-64 border-r bg-gray-100/40 p-4 dark:bg-gray-800/40">
-      <div className="space-y-4">
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-medium">Sections completed</h2>
-            <span className="text-xs text-gray-500 dark:text-gray-400">0/4</span>
-          </div>
-          <Progress value={0} />
-        </div>
-        <nav className="space-y-2">
-          <Button variant="ghost" className="w-full justify-start gap-2">
-            <FileText className="h-4 w-4" />
-            Contact
+    <div className="flex flex-col gap-4 p-4 max-w-xs h-full justify-center items-center">
+      {/* Menu Section */}
+      <Card className="p-4 space-y-2">
+        {menuItems.map((item) => (
+          <Button
+            key={item}
+            variant="ghost"
+            className="w-full justify-start text-left text-sm"
+            onClick={() => handleMenuClick(item)}
+          >
+            {item}
           </Button>
-          <Button variant="ghost" className="w-full justify-start gap-2">
-            <Briefcase className="h-4 w-4" />
-            Experience
+        ))}
+      </Card>
+
+      {/* Action Section */}
+      <Card className="p-4 space-y-2">
+        {actionItems.map((action) => (
+          <Button
+            key={action}
+            variant="ghost"
+            className="w-full justify-start text-left text-sm"
+            onClick={() => handleActionClick(action)}
+          >
+            {action}
           </Button>
-          <Button variant="ghost" className="w-full justify-start gap-2">
-            <GraduationCap className="h-4 w-4" />
-            Education
-          </Button>
-          <Button variant="ghost" className="w-full justify-start gap-2">
-            <Award className="h-4 w-4" />
-            Skills
-          </Button>
-        </nav>
+        ))}
+      </Card>
+
+      {/* Footer Section */}
+      <div className="text-xs text-center text-gray-500">
+        Last Edited Sat 1 Feb 15.06
       </div>
     </div>
-  )
-}
+  );
+};
 
+export default ResumeSidebar;
