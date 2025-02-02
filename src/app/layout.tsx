@@ -1,6 +1,7 @@
+import "./globals.css";
+
 import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
-import "./globals.css";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -18,7 +19,7 @@ export default function RootLayout({
       <body
         className={cn(
           GeistSans.variable,
-          "antialiased transition-all font-primary",
+          "antialiased transition-all",
         )}
       >
         {children}
