@@ -33,14 +33,12 @@
   text-wrap: balance;
 }
 
-@layer utilities {
-  body {
-    font-family: Arial, Helvetica, sans-serif;
-  }
-}
-
 @layer base {
   :root {
     --radius: 0.5rem;
   }
+}
+
+@theme {
+  --font-primary: var(--font-geist-sans), 'sans-serif';
 }
