@@ -4,6 +4,7 @@ import React from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useResumeContext } from "@/context/resume-context";
 
 export const ResumeSidebar = () => {
   const menuItems = ["Title", "Summary", "Experience", "Skills", "Education"];
@@ -13,6 +14,8 @@ export const ResumeSidebar = () => {
     "Create Cover Letter",
     "Apply Job Link",
   ];
+  
+  const { downloadPdf } = useResumeContext();
 
   const handleMenuClick = (item: string) => {
     console.log(`${item} clicked`);
@@ -20,6 +23,9 @@ export const ResumeSidebar = () => {
 
   const handleActionClick = (action: string) => {
     console.log(`${action} clicked`);
+    if (action === "Download") {
+      downloadPdf();
+    }
   };
 
   return (

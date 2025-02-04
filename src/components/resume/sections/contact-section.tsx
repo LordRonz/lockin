@@ -1,19 +1,19 @@
 // src/components/contact-modal.tsx
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { useAtom } from "jotai"
-import * as z from "zod"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useAtom } from "jotai";
+import * as z from "zod";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -21,63 +21,64 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { contactDataAtom, contactModalOpenAtom, contactSchema } from "@/lib/store/contact"
+} from "@/components/ui/form";
+import {
+  contactDataAtom,
+  contactModalOpenAtom,
+  contactSchema,
+} from "@/lib/store/contact";
+import InputWithLabel from "@/components/ui/input-with-label";
 
 export function ContactModal() {
-  const [isOpen, setOpen] = useAtom(contactModalOpenAtom)
-  const [contactData, setContactData] = useAtom(contactDataAtom)
+  const [isOpen, setOpen] = useAtom(contactModalOpenAtom);
+  const [contactData, setContactData] = useAtom(contactDataAtom);
 
   const form = useForm<z.infer<typeof contactSchema>>({
     resolver: zodResolver(contactSchema),
     defaultValues: contactData,
-  })
+  });
 
   function onSubmit(values: z.infer<typeof contactSchema>) {
-    setContactData(values)
-    setOpen(false)
+    setContactData(values);
+    setOpen(false);
   }
 
   return (
     <Dialog open={isOpen} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle className="text-gray-900">Edit Contact Information</DialogTitle>
-          <DialogDescription className="text-gray-600">
-            Update your contact details below.
-          </DialogDescription>
+          <DialogTitle className="text-gray-900">Title</DialogTitle>
         </DialogHeader>
-        
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField
-              control={form.control}
-              name="fullName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-gray-700">Full Name</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="John Doe"
-                      className="focus:ring-blue-500"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-red-500" />
-                </FormItem>
-              )}
-            />
-            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
+                name="fullName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <InputWithLabel
+                        placeholder="John Doe"
+                        label="🪪 Name"
+                        className="focus:ring-blue-500"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700">Email</FormLabel>
                     <FormControl>
-                      <Input
+                      <InputWithLabel
                         placeholder="john@example.com"
+                        label="＠ Email"
                         type="email"
                         className="focus:ring-blue-500"
                         {...field}
@@ -87,16 +88,38 @@ export function ContactModal() {
                   </FormItem>
                 )}
               />
-              
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <InputWithLabel
+                        placeholder="Ohio"
+                        label="🏡 Domicile"
+                        type="text"
+                        className="focus:ring-blue-500"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 control={form.control}
                 name="phone"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700">Phone</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="+1 (555) 000-0000"
+                      <InputWithLabel
+                        placeholder="+1 6969696969"
+                        label="☎️ Number"
+                        type="text"
                         className="focus:ring-blue-500"
                         {...field}
                       />
@@ -106,25 +129,28 @@ export function ContactModal() {
                 )}
               />
             </div>
-            
-            <FormField
-              control={form.control}
-              name="location"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-gray-700">Location</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="City, State"
-                      className="focus:ring-blue-500"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-red-500" />
-                </FormItem>
-              )}
-            />
-            
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
+                name="location"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <InputWithLabel
+                        placeholder="www.example.com"
+                        label="🕸️ Website"
+                        type="text"
+                        className="focus:ring-blue-500"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+            </div>
+
             <div className="flex justify-end gap-4">
               <Button
                 type="button"
@@ -136,7 +162,7 @@ export function ContactModal() {
               </Button>
               <Button
                 type="submit"
-                className="bg-blue-600 hover:bg-blue-700 text-white"
+                className="bg-orange-400 hover:bg-orange-500 text-white"
               >
                 Save Changes
               </Button>
@@ -145,5 +171,5 @@ export function ContactModal() {
         </Form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

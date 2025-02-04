@@ -1,18 +1,12 @@
 "use client";
 
 import { ResumeComponent } from "./resume";
-import { Button } from "@/components/ui/button";
-import { usePdfExport } from "@/app/hooks/usePdfExport";
-import { DownloadIcon } from "lucide-react";
+import { useResumeContext } from "@/context/resume-context";
 
 export function ResumeEditor() {
-  const { resumeRef, downloadPdf } = usePdfExport();
+  const { resumeRef } = useResumeContext();
   return (
     <div className="container mx-auto max-w-3xl py-8">
-      <Button className="my-6" onClick={() => downloadPdf()}>
-        Download PDF
-        <DownloadIcon className="ml-2" />
-      </Button>
       <ResumeComponent ref={resumeRef} />
     </div>
   );
