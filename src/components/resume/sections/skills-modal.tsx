@@ -13,7 +13,6 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -27,6 +26,8 @@ import {
   skillsModalOpenAtom,
   skillsSchema,
 } from "@/lib/store/resume";
+import InputWithLabel from "@/components/ui/input-with-label";
+import { Badge } from "@/components/ui/badge";
 
 export function SkillsModal() {
   const [isOpen, setOpen] = useAtom(skillsModalOpenAtom);
@@ -83,9 +84,10 @@ export function SkillsModal() {
                 <FormItem>
                   <FormLabel className="text-gray-700">Skills</FormLabel>
                   <FormControl>
-                    <Input
+                    <InputWithLabel
                       placeholder="e.g., Communication, Sales, CRM Software"
                       className="focus:ring-blue-500"
+                      label="Add New Skills"
                       {...field}
                     />
                   </FormControl>
@@ -93,6 +95,8 @@ export function SkillsModal() {
                 </FormItem>
               )}
             />
+            
+            <Badge className="py-4">Test</Badge>
 
             <div className="flex justify-end gap-4">
               <Button
