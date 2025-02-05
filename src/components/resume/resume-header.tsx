@@ -1,24 +1,24 @@
-import { Button } from "@/components/ui/button";
-import { Download, LayoutTemplate, Settings } from "lucide-react";
-
 export function ResumeHeader() {
   return (
-    <header className="sticky top-0 bg-white shadow flex items-center justify-between border-b px-6 py-3">
-      <h1 className="text-2xl font-semibold">My Resume</h1>
-      <div className="flex items-center gap-2">
-        <Button variant="outline" size="sm">
-          <LayoutTemplate className="mr-2 h-4 w-4" />
-          Templates
-        </Button>
-        <Button variant="outline" size="sm">
-          <Settings className="mr-2 h-4 w-4" />
-          Manage Sections
-        </Button>
-        <Button size="sm">
-          <Download className="mr-2 h-4 w-4" />
-          Download Resume
-        </Button>
-      </div>
+    <header className="sticky top-0 flex items-center justify-center px-6 py-3">
+      <nav className="flex items-center justify-center bg-gray-50 p-4 rounded-full shadow-md space-x-6">
+        <button className="flex items-center space-x-2 text-gray-800 hover:text-black focus:outline-none">
+          <span>👽</span>
+          <span>LockedIn</span>
+        </button>
+        <button className="px-8 py-2 text-gray-800 hover:text-black focus:outline-none">
+          Curriculum Vitae
+        </button>
+        <button className="px-8 py-2 bg-gray-200 rounded-full text-gray-800 focus:outline-none">
+          Resume
+        </button>
+        <button className="px-8 py-2 text-gray-800 hover:text-black focus:outline-none">
+          Cover Letters
+        </button>
+        <button className="px-8 py-2 text-gray-800 hover:text-black focus:outline-none">
+          Applications
+        </button>
+      </nav>
     </header>
   );
 }

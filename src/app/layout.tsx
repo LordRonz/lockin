@@ -19,7 +19,7 @@ export default function RootLayout({
       <body
         className={cn(
           GeistSans.variable,
-          "antialiased transition-all",
+          "antialiased transition-all bg-[#F8F7F3]",
         )}
       >
         {children}

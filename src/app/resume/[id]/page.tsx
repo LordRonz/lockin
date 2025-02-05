@@ -6,9 +6,9 @@ import { ResumeProvider } from "@/context/resume-context";
 export default function ResumePage() {
   return (
     <ResumeProvider>
-      <div className="flex h-screen bg-[#F8F7F3]">
+      <ResumeHeader />
+      <div className="flex">
         <main className="flex-1 overflow-auto">
-          <ResumeHeader />
           <ResumeEditor />
         </main>
         <ResumeSidebar />
