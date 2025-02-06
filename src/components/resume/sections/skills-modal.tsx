@@ -15,10 +15,8 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   Form,
-  FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import {
@@ -26,44 +24,56 @@ import {
   skillsModalOpenAtom,
   skillsSchema,
 } from "@/lib/store/resume";
-import InputWithLabel from "@/components/ui/input-with-label";
 import { Badge } from "@/components/ui/badge";
+import InputWithLabel from "@/components/ui/input-with-label";
+import { XIcon } from "lucide-react";
 
 export function SkillsModal() {
   const [isOpen, setOpen] = useAtom(skillsModalOpenAtom);
   const [skills, setSkills] = useAtom(skillsAtom);
 
   const form = useForm<{ skillsInput: string }>({
-    resolver: zodResolver(z.object({
-      skillsInput: z.string().min(1, "At least one skill is required")
-    })),
+    resolver: zodResolver(
+      z.object({
+        skillsInput: z.string().optional(),
+      }),
+    ),
     defaultValues: {
-      skillsInput: skills.join(", ")
+      skillsInput: "",
     },
   });
 
-  function onSubmit(data: { skillsInput: string }) {
+  const handleAddSkill = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && form.getValues("skillsInput").trim() !== "") {
+      const newSkill = form.getValues("skillsInput").trim();
+      if (!skills.includes(newSkill)) {
+        const updatedSkills = [...skills, newSkill];
+        setSkills(updatedSkills);
+        form.setValue("skillsInput", ""); // Clear input
+      }
+      e.preventDefault();
+    }
+  };
+
+  const handleRemoveSkill = (skill: string) => {
+    setSkills((prev) => prev.filter((s) => s !== skill));
+  };
+
+  const onSubmit = () => {
     try {
-      const parsedSkills = data.skillsInput
-        .split(",")
-        .map(skill => skill.trim())
-        .filter(skill => skill.length > 0);
-      
-      // Validate against the original schema
-      const validatedSkills = skillsSchema.parse(parsedSkills);
+      // Validate against schema and save
+      const validatedSkills = skillsSchema.parse(skills);
       setSkills(validatedSkills);
       setOpen(false);
     } catch (error) {
       if (error instanceof z.ZodError) {
-        error.errors.forEach((err) => {
-          form.setError("skillsInput", {
-            type: "manual",
-            message: err.message
-          });
+        form.setError("skillsInput", {
+          type: "manual",
+          message: error.errors.map((err) => err.message).join(", "),
         });
       }
     }
-  }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={setOpen}>
@@ -71,7 +81,7 @@ export function SkillsModal() {
         <DialogHeader>
           <DialogTitle className="text-gray-900">Edit Skills</DialogTitle>
           <DialogDescription className="text-gray-600">
-            Add or modify your skills (comma separated)
+            Add or modify your skills.
           </DialogDescription>
         </DialogHeader>
 
@@ -82,21 +92,40 @@ export function SkillsModal() {
               name="skillsInput"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-gray-700">Skills</FormLabel>
-                  <FormControl>
-                    <InputWithLabel
-                      placeholder="e.g., Communication, Sales, CRM Software"
-                      className="focus:ring-blue-500"
-                      label="Add New Skills"
-                      {...field}
-                    />
-                  </FormControl>
                   <FormMessage className="text-red-500" />
+                  <InputWithLabel
+                    label="Add New Skills"
+                    placeholder="Type and press Enter"
+                    value={field.value}
+                    onChange={(e) =>
+                      form.setValue("skillsInput", e.target.value)
+                    }
+                    onKeyDown={handleAddSkill}
+                    className="focus:ring-blue-500"
+                  />
                 </FormItem>
               )}
             />
-            
-            <Badge className="py-4">Test</Badge>
+
+            <div className="flex flex-wrap gap-2 mt-4">
+              {skills.map((skill, index) => (
+                <Badge
+                  key={index}
+                  variant="secondary"
+                  className="flex items-center space-x-2"
+                >
+                  <span>{skill}</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="p-0"
+                    onClick={() => handleRemoveSkill(skill)}
+                  >
+                    <XIcon size={16} />
+                  </Button>
+                </Badge>
+              ))}
+            </div>
 
             <div className="flex justify-end gap-4">
               <Button
