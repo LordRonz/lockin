@@ -25,7 +25,7 @@ interface ResumeSectionProps {
 const ResumeSection = ({ title, children, onClick }: ResumeSectionProps) => (
   <section
     className="group p-4 transition-all
-               hover:shadow-md 
+               hover:shadow-md
                cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-blue-300 hover:ring-orange-200 hover:ring-2 rounded-lg"
     tabIndex={0}
     onClick={onClick}
@@ -150,14 +150,7 @@ export const ResumeComponent = ({
 
       <ResumeSection title="Skills" onClick={() => setSkillsModalOpen(true)}>
         <div className="flex flex-wrap gap-4">
-          {skills.map((skill, index) => (
-            <span
-              key={index}
-              className="px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm"
-            >
-              {skill}
-            </span>
-          ))}
+          <span>{skills.join(" | ")}</span>
         </div>
       </ResumeSection>
 
