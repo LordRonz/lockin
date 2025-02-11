@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useResumeContext } from "@/context/resume-context";
+import ResumeCompletion from "./resume-completion";
 
 export const ResumeSidebar = () => {
   const menuItems = ["Title", "Summary", "Experience", "Skills", "Education"];
@@ -31,7 +32,7 @@ export const ResumeSidebar = () => {
   return (
     <div className="flex flex-col gap-4 p-4 max-w-xs h-full justify-center items-center">
       {/* Menu Section */}
-      <Card className="p-4 space-y-2 rounded-4xl">
+      {/* <Card className="p-4 space-y-2 rounded-4xl">
         {menuItems.map((item, index) => (
           <Button
             key={item}
@@ -46,7 +47,9 @@ export const ResumeSidebar = () => {
             {item}
           </Button>
         ))}
-      </Card>
+      </Card> */}
+      
+      <ResumeCompletion />
 
       {/* Action Section */}
       <Card className="p-4 space-y-2 rounded-4xl">
