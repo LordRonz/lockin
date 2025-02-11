@@ -8,7 +8,6 @@ import { useResumeContext } from "@/context/resume-context";
 import ResumeCompletion from "./resume-completion";
 
 export const ResumeSidebar = () => {
-  const menuItems = ["Title", "Summary", "Experience", "Skills", "Education"];
   const actionItems = [
     "Download",
     "Share",
@@ -17,10 +16,6 @@ export const ResumeSidebar = () => {
   ];
   
   const { downloadPdf } = useResumeContext();
-
-  const handleMenuClick = (item: string) => {
-    console.log(`${item} clicked`);
-  };
 
   const handleActionClick = (action: string) => {
     console.log(`${action} clicked`);
