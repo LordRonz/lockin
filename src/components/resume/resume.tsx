@@ -11,10 +11,13 @@ import {
   experiencesAtom,
   skillsAtom,
   skillsModalOpenAtom,
+  summaryAtom,
+  summaryModalOpenAtom,
 } from "@/lib/store/resume";
 import { ExperienceModal } from "./sections/experience-modal";
 import { EducationModal } from "./sections/education-modal";
 import { SkillsModal } from "./sections/skills-modal";
+import { SummaryModal } from "./sections/summary-modal";
 
 interface ResumeSectionProps {
   title?: string;
@@ -80,11 +83,13 @@ export const ResumeComponent = ({
   const [experiences] = useAtom(experiencesAtom);
   const [education] = useAtom(educationAtom);
   const [skills] = useAtom(skillsAtom);
+  const [summary] = useAtom(summaryAtom);
 
   const [, setContactModalOpen] = useAtom(contactModalOpenAtom);
   const [, setExperienceModalOpen] = useAtom(experienceModalOpenAtom);
   const [, setEducationModalOpen] = useAtom(educationModalOpenAtom);
   const [, setSkillsModalOpen] = useAtom(skillsModalOpenAtom);
+  const [, setSummaryModalOpen] = useAtom(summaryModalOpenAtom);
 
   const contactInfo = [
     contactData.phone,
@@ -113,18 +118,8 @@ export const ResumeComponent = ({
         </div>
       </ResumeSection>
 
-      <ResumeSection title="Summary">
-        <p>
-          Product Designer with a strong foundation in Software Development,
-          currently working as a junior product designer at Apple Developer
-          Academy @Binus. My Software Development background has sharpened my
-          analytical thinking, and attention to detail in the context of
-          collaboration, which I apply to crafting intuitive, user-centered
-          design while achieving developer friendly innovations. With passion in
-          design and experience in UI/UX design and problem-solving, I am
-          seeking opportunities to further my expertise or contribute as a
-          Product Designer building solutions to actual real world problems.
-        </p>
+      <ResumeSection title="Summary" onClick={() => setSummaryModalOpen(true)}>
+        <p>{summary.text}</p>
       </ResumeSection>
 
       <ResumeSection
@@ -177,6 +172,7 @@ export const ResumeComponent = ({
       <ExperienceModal />
       <EducationModal />
       <SkillsModal />
+      <SummaryModal />
     </div>
   );
 };

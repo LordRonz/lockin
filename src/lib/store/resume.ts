@@ -3,6 +3,11 @@ import { atom } from 'jotai'
 import { z } from 'zod'
 
 // Experience Schema
+export const summarySchema = z.object({
+  text: z.string().min(1, "Summary is required"),
+})
+
+// Experience Schema
 export const experienceSchema = z.object({
   company: z.string().min(1, "Company name is required"),
   position: z.string().min(1, "Position is required"),
@@ -27,6 +32,7 @@ export const skillsSchema = z.array(z.string().min(1, "Skill cannot be empty")).
 export type Experience = z.infer<typeof experienceSchema>
 export type Education = z.infer<typeof educationSchema>
 export type Skills = z.infer<typeof skillsSchema>
+export type Summary = z.infer<typeof summarySchema>
 
 // Initial States
 const initialExperiences: Experience[] = [{
@@ -47,12 +53,18 @@ const initialEducation: Education = {
 
 const initialSkills: Skills = ["Skill 1", "Skill 2", "Skill 3", "Skill 4"]
 
+const initialSummary: Summary = {
+  text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut purus eget sapien."
+}
+
 // Jotai Atoms
 export const experiencesAtom = atom<Experience[]>(initialExperiences)
 export const educationAtom = atom<Education>(initialEducation)
 export const skillsAtom = atom<Skills>(initialSkills)
+export const summaryAtom = atom<Summary>(initialSummary)
 
 // Modal Control Atoms
 export const experienceModalOpenAtom = atom(false)
 export const educationModalOpenAtom = atom(false)
 export const skillsModalOpenAtom = atom(false)
+export const summaryModalOpenAtom = atom(false)
