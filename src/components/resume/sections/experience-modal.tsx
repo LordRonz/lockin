@@ -1,33 +1,36 @@
 // src/components/experience-modal.tsx
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { useAtom } from "jotai"
-import * as z from "zod"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useAtom } from "jotai";
+import * as z from "zod";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { experiencesAtom, experienceModalOpenAtom, experienceSchema } from "@/lib/store/resume"
+} from "@/components/ui/form";
+import {
+  experiencesAtom,
+  experienceModalOpenAtom,
+  experienceSchema,
+} from "@/lib/store/resume";
+import InputWithLabel from "@/components/ui/input-with-label";
 
 export function ExperienceModal() {
-  const [isOpen, setOpen] = useAtom(experienceModalOpenAtom)
-  const [experiences, setExperiences] = useAtom(experiencesAtom)
+  const [isOpen, setOpen] = useAtom(experienceModalOpenAtom);
+  const [experiences, setExperiences] = useAtom(experiencesAtom);
 
   const form = useForm<z.infer<typeof experienceSchema>>({
     resolver: zodResolver(experienceSchema),
@@ -36,25 +39,27 @@ export function ExperienceModal() {
       position: "",
       location: "",
       dates: "",
-      description: ""
+      description: "",
     },
-  })
+  });
 
   function onSubmit(values: z.infer<typeof experienceSchema>) {
-    setExperiences([...experiences, values])
-    setOpen(false)
+    setExperiences([...experiences, values]);
+    setOpen(false);
   }
 
   return (
     <Dialog open={isOpen} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-[700px]">
         <DialogHeader>
-          <DialogTitle className="text-gray-900">Add Work Experience</DialogTitle>
+          <DialogTitle className="text-gray-900">
+            Add Work Experience
+          </DialogTitle>
           <DialogDescription className="text-gray-600">
             Describe your professional experience
           </DialogDescription>
         </DialogHeader>
-        
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-2 gap-6">
@@ -63,9 +68,9 @@ export function ExperienceModal() {
                 name="company"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700">Company</FormLabel>
                     <FormControl>
-                      <Input
+                      <InputWithLabel
+                        label="🏢 Company"
                         placeholder="Company Name"
                         className="focus:ring-blue-500"
                         {...field}
@@ -75,15 +80,15 @@ export function ExperienceModal() {
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="position"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700">Position</FormLabel>
                     <FormControl>
-                      <Input
+                      <InputWithLabel
+                        label="👨‍💼 Title"
                         placeholder="Job Title"
                         className="focus:ring-blue-500"
                         {...field}
@@ -101,9 +106,9 @@ export function ExperienceModal() {
                 name="location"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700">Location</FormLabel>
                     <FormControl>
-                      <Input
+                      <InputWithLabel
+                        label="📍 Location"
                         placeholder="City, Country"
                         className="focus:ring-blue-500"
                         {...field}
@@ -113,15 +118,15 @@ export function ExperienceModal() {
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="dates"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700">Dates</FormLabel>
                     <FormControl>
-                      <Input
+                      <InputWithLabel
+                        label="⏳ Period"
                         placeholder="MM/YYYY - MM/YYYY"
                         className="focus:ring-blue-500"
                         {...field}
@@ -133,7 +138,7 @@ export function ExperienceModal() {
               />
             </div>
 
-            <FormField
+            {/* <FormField
               control={form.control}
               name="description"
               render={({ field }) => (
@@ -149,8 +154,43 @@ export function ExperienceModal() {
                   <FormMessage className="text-red-500" />
                 </FormItem>
               )}
-            />
-            
+            /> */}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Left - Textarea */}
+              <div className="flex-1 p-4 bg-gray-100 rounded-2xl">
+                <h2 className="text-base font-semibold mb-2">
+                  🔑 Key Responsibilities and Achievements :
+                </h2>
+
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Enter your summary..."
+                          className="w-full min-h-[200px] p-3 resize-none dark:border-none border-none outline-none focus:border-none focus-visible:ring-0 shadow-none ring-0 active:border-none rounded-lg"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-red-500" />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              {/* Right - AI Enhance Button */}
+              <div className="flex-1 flex justify-center items-center">
+                <div className="w-full md:w-[300px] h-full flex items-center justify-center rounded-2xl bg-gradient-to-r from-orange-300 to-orange-100">
+                  <Button className="bg-white text-orange-500 font-semibold">
+                    AI Enhance Summary
+                  </Button>
+                </div>
+              </div>
+            </div>
+
             <div className="flex justify-end gap-4">
               <Button
                 type="button"
@@ -171,5 +211,5 @@ export function ExperienceModal() {
         </Form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
