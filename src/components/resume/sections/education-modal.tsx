@@ -1,19 +1,19 @@
 // src/components/education-modal.tsx
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { useAtom } from "jotai"
-import * as z from "zod"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useAtom } from "jotai";
+import * as z from "zod";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -21,21 +21,25 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { educationAtom, educationModalOpenAtom, educationSchema } from "@/lib/store/resume"
+} from "@/components/ui/form";
+import {
+  educationAtom,
+  educationModalOpenAtom,
+  educationSchema,
+} from "@/lib/store/resume";
 
 export function EducationModal() {
-  const [isOpen, setOpen] = useAtom(educationModalOpenAtom)
-  const [education, setEducation] = useAtom(educationAtom)
+  const [isOpen, setOpen] = useAtom(educationModalOpenAtom);
+  const [education, setEducation] = useAtom(educationAtom);
 
   const form = useForm<z.infer<typeof educationSchema>>({
     resolver: zodResolver(educationSchema),
     defaultValues: education,
-  })
+  });
 
   function onSubmit(values: z.infer<typeof educationSchema>) {
-    setEducation(values)
-    setOpen(false)
+    setEducation(values);
+    setOpen(false);
   }
 
   return (
@@ -47,7 +51,7 @@ export function EducationModal() {
             Update your educational background
           </DialogDescription>
         </DialogHeader>
-        
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-2 gap-6">
@@ -68,7 +72,7 @@ export function EducationModal() {
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="degree"
@@ -94,7 +98,9 @@ export function EducationModal() {
                 name="field"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700">Field of Study</FormLabel>
+                    <FormLabel className="text-gray-700">
+                      Field of Study
+                    </FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Computer Science"
@@ -106,7 +112,7 @@ export function EducationModal() {
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="dates"
@@ -143,7 +149,7 @@ export function EducationModal() {
                 </FormItem>
               )}
             />
-            
+
             <div className="flex justify-end gap-4">
               <Button
                 type="button"
@@ -155,14 +161,14 @@ export function EducationModal() {
               </Button>
               <Button
                 type="submit"
-                className="bg-blue-600 hover:bg-blue-700 text-white"
+                className="bg-orange-400 hover:bg-orange-500 text-white"
               >
-                Save Education
+                Save
               </Button>
             </div>
           </form>
         </Form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

@@ -202,9 +202,9 @@ export function ExperienceModal() {
               </Button>
               <Button
                 type="submit"
-                className="bg-blue-600 hover:bg-blue-700 text-white"
+                className="bg-orange-400 hover:bg-blue-700 text-white"
               >
-                Save Experience
+                Save
               </Button>
             </div>
           </form>

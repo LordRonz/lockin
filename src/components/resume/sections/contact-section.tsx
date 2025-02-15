@@ -161,7 +161,7 @@ export function ContactModal() {
                 type="submit"
                 className="bg-orange-400 hover:bg-orange-500 text-white"
               >
-                Save Changes
+                Save
               </Button>
             </div>
           </form>
