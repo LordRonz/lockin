@@ -18,6 +18,7 @@ export const experienceSchema = z.object({
 
 // Education Schema
 export const educationSchema = z.object({
+  level: z.string().min(1, "Level of education is required"),
   institution: z.string().min(1, "Institution name is required"),
   degree: z.string().min(1, "Degree is required"),
   field: z.string().min(1, "Field of study is required"),
@@ -43,13 +44,14 @@ const initialExperiences: Experience[] = [{
   description: "Key responsibilities and achievements"
 }]
 
-const initialEducation: Education = {
+const initialEducations: Education[] = [{
+  level: "Undergraduate",
   institution: "Graduated School",
   degree: "Field of study",
   field: "Field of study",
   location: "Location",
   dates: "Graduation Date"
-}
+}]
 
 const initialSkills: Skills = ["Skill 1", "Skill 2", "Skill 3", "Skill 4"]
 
@@ -59,7 +61,7 @@ const initialSummary: Summary = {
 
 // Jotai Atoms
 export const experiencesAtom = atom<Experience[]>(initialExperiences)
-export const educationAtom = atom<Education>(initialEducation)
+export const educationsAtom = atom<Education[]>(initialEducations)
 export const skillsAtom = atom<Skills>(initialSkills)
 export const summaryAtom = atom<Summary>(initialSummary)
 

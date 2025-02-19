@@ -2,7 +2,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { useAtom } from "jotai";
 import * as z from "zod";
 import {
@@ -10,35 +10,57 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import {
-  educationAtom,
   educationModalOpenAtom,
+  educationsAtom,
   educationSchema,
 } from "@/lib/store/resume";
+import { Plus, Trash } from "lucide-react";
+import InputWithLabel from "@/components/ui/input-with-label";
+import { Separator } from "@/components/ui/separator";
 
 export function EducationModal() {
   const [isOpen, setOpen] = useAtom(educationModalOpenAtom);
-  const [education, setEducation] = useAtom(educationAtom);
+  const [educations, setEducations] = useAtom(educationsAtom);
 
-  const form = useForm<z.infer<typeof educationSchema>>({
-    resolver: zodResolver(educationSchema),
-    defaultValues: education,
+  const form = useForm<{ educations: z.infer<typeof educationSchema>[] }>({
+    resolver: zodResolver(
+      z.object({
+        educations: z.array(educationSchema),
+      }),
+    ),
+    defaultValues: {
+      educations: educations.length
+        ? educations
+        : [
+            {
+              level: "",
+              institution: "",
+              degree: "",
+              field: "",
+              location: "",
+              dates: "",
+            },
+          ],
+    },
   });
 
-  function onSubmit(values: z.infer<typeof educationSchema>) {
-    setEducation(values);
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "educations",
+  });
+
+  function onSubmit(values: { educations: z.infer<typeof educationSchema>[] }) {
+    setEducations(values.educations);
     setOpen(false);
   }
 
@@ -47,108 +69,137 @@ export function EducationModal() {
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle className="text-gray-900">Education Details</DialogTitle>
-          <DialogDescription className="text-gray-600">
-            Update your educational background
-          </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <div className="grid grid-cols-2 gap-6">
-              <FormField
-                control={form.control}
-                name="institution"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-gray-700">Institution</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="University Name"
-                        className="focus:ring-blue-500"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-red-500" />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="degree"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-gray-700">Degree</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Bachelor's Degree"
-                        className="focus:ring-blue-500"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-red-500" />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-6">
-              <FormField
-                control={form.control}
-                name="field"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-gray-700">
-                      Field of Study
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Computer Science"
-                        className="focus:ring-blue-500"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-red-500" />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="dates"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-gray-700">Dates</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="MM/YYYY - MM/YYYY"
-                        className="focus:ring-blue-500"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-red-500" />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <FormField
-              control={form.control}
-              name="location"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-gray-700">Location</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="City, Country"
-                      className="focus:ring-blue-500"
-                      {...field}
+            {fields.map((field, index) => (
+              <>
+                <div key={field.id} className="relative rounded-lg space-y-4">
+                  <FormField
+                    control={form.control}
+                    name={`educations.${index}.level`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <InputWithLabel
+                            label="📖 Education"
+                            placeholder="High School, Bachelor's, etc."
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <div className="grid grid-cols-2 gap-6">
+                    <FormField
+                      control={form.control}
+                      name={`educations.${index}.institution`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <InputWithLabel
+                              label="🎓 Institution"
+                              placeholder="University Name"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
-                  </FormControl>
-                  <FormMessage className="text-red-500" />
-                </FormItem>
-              )}
-            />
+                    <FormField
+                      control={form.control}
+                      name={`educations.${index}.degree`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <InputWithLabel
+                              label="📜 Degree"
+                              placeholder="Bachelor's Degree"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-6">
+                    <FormField
+                      control={form.control}
+                      name={`educations.${index}.field`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <InputWithLabel
+                              label="📚 Field of Study"
+                              placeholder="Computer Science"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name={`educations.${index}.dates`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <InputWithLabel
+                              label="⏳ Period"
+                              placeholder="MM/YYYY - MM/YYYY"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  {/* Remove Button */}
+                  {fields.length > 1 && (
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      className="absolute top-2 right-2"
+                      onClick={() => remove(index)}
+                    >
+                      <Trash size={16} />
+                    </Button>
+                  )}
+                </div>
+
+                {index < fields.length - 1 && (
+                  <Separator className="bg-orange-400 h-1 rounded-2xl" />
+                )}
+              </>
+            ))}
+
+            <div className="flex justify-center">
+              <Button
+                type="button"
+                variant="outline"
+                className="flex items-center justify-center gap-2 border-orange-300 rounded-xl"
+                onClick={() =>
+                  append({
+                    level: "",
+                    institution: "",
+                    degree: "",
+                    field: "",
+                    location: "",
+                    dates: "",
+                  })
+                }
+              >
+                <Plus size={16} /> Add More Educations
+              </Button>
+            </div>
 
             <div className="flex justify-end gap-4">
               <Button

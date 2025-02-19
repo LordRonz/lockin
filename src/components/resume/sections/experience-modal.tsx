@@ -27,6 +27,7 @@ import {
 } from "@/lib/store/resume";
 import InputWithLabel from "@/components/ui/input-with-label";
 import { Plus, Trash } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 
 export function ExperienceModal() {
   const [isOpen, setOpen] = useAtom(experienceModalOpenAtom);
@@ -80,127 +81,132 @@ export function ExperienceModal() {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             {fields.map((field, index) => (
-              <div
-                key={field.id}
-                className="relative border p-4 rounded-lg space-y-4"
-              >
-                <div className="grid grid-cols-2 gap-6">
-                  <FormField
-                    control={form.control}
-                    name={`experiences.${index}.company`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <InputWithLabel
-                            label="🏢 Company"
-                            placeholder="Company Name"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name={`experiences.${index}.position`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <InputWithLabel
-                            label="👨‍💼 Title"
-                            placeholder="Job Title"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+              <>
+                <div
+                  key={field.id}
+                  className="relative border p-4 rounded-lg space-y-4"
+                >
+                  <div className="grid grid-cols-2 gap-6">
+                    <FormField
+                      control={form.control}
+                      name={`experiences.${index}.company`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <InputWithLabel
+                              label="🏢 Company"
+                              placeholder="Company Name"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name={`experiences.${index}.position`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <InputWithLabel
+                              label="👨‍💼 Title"
+                              placeholder="Job Title"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
 
-                <div className="grid grid-cols-2 gap-6">
-                  <FormField
-                    control={form.control}
-                    name={`experiences.${index}.location`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <InputWithLabel
-                            label="📍 Location"
-                            placeholder="City, Country"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name={`experiences.${index}.dates`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <InputWithLabel
-                            label="⏳ Period"
-                            placeholder="MM/YYYY - MM/YYYY"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Left - Textarea */}
-                  <div className="flex-1 p-4 bg-gray-100 rounded-2xl">
-                    <h2 className="text-base font-semibold mb-2">
-                      🔑 Key Responsibilities and Achievements :
-                    </h2>
-
+                  <div className="grid grid-cols-2 gap-6">
+                    <FormField
+                      control={form.control}
+                      name={`experiences.${index}.location`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <InputWithLabel
+                              label="📍 Location"
+                              placeholder="City, Country"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                     <FormField
                       control={form.control}
                       name={`experiences.${index}.dates`}
                       render={({ field }) => (
                         <FormItem>
                           <FormControl>
-                            <Textarea
-                              placeholder="Enter your summary..."
-                              className="w-full min-h-[200px] p-3 resize-none dark:border-none border-none outline-none focus:border-none focus-visible:ring-0 shadow-none ring-0 active:border-none rounded-lg"
+                            <InputWithLabel
+                              label="⏳ Period"
+                              placeholder="MM/YYYY - MM/YYYY"
                               {...field}
                             />
                           </FormControl>
-                          <FormMessage className="text-red-500" />
+                          <FormMessage />
                         </FormItem>
                       )}
                     />
                   </div>
 
-                  {/* Right - AI Enhance Button */}
-                  <div className="flex-1 flex justify-center items-center">
-                    <div className="w-full h-full flex items-center justify-center rounded-2xl bg-gradient-to-r from-orange-300 to-orange-100">
-                      <Button className="bg-white text-orange-500 font-semibold">
-                        AI Enhance Summary
-                      </Button>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Left - Textarea */}
+                    <div className="flex-1 p-4 bg-gray-100 rounded-2xl">
+                      <h2 className="text-base font-semibold mb-2">
+                        🔑 Key Responsibilities and Achievements :
+                      </h2>
+
+                      <FormField
+                        control={form.control}
+                        name={`experiences.${index}.dates`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Textarea
+                                placeholder="Enter your summary..."
+                                className="w-full min-h-[200px] p-3 resize-none dark:border-none border-none outline-none focus:border-none focus-visible:ring-0 shadow-none ring-0 active:border-none rounded-lg"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage className="text-red-500" />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    {/* Right - AI Enhance Button */}
+                    <div className="flex-1 flex justify-center items-center">
+                      <div className="w-full h-full flex items-center justify-center rounded-2xl bg-gradient-to-r from-orange-300 to-orange-100">
+                        <Button className="bg-white text-orange-500 font-semibold">
+                          AI Enhance Summary
+                        </Button>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Remove Button */}
-                {fields.length > 1 && (
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    className="absolute top-2 right-2"
-                    onClick={() => remove(index)}
-                  >
-                    <Trash size={16} />
-                  </Button>
+                  {/* Remove Button */}
+                  {fields.length > 1 && (
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      className="absolute top-2 right-2"
+                      onClick={() => remove(index)}
+                    >
+                      <Trash size={16} />
+                    </Button>
+                  )}
+                </div>
+                {index < fields.length - 1 && (
+                  <Separator className="bg-orange-400 h-1 rounded-2xl" />
                 )}
-              </div>
+              </>
             ))}
 
             {/* Add New Experience Button */}

@@ -5,7 +5,7 @@ import React from "react";
 import { contactDataAtom, contactModalOpenAtom } from "@/lib/store/contact";
 import { useAtom } from "jotai";
 import {
-  educationAtom,
+  educationsAtom,
   educationModalOpenAtom,
   experienceModalOpenAtom,
   experiencesAtom,
@@ -81,7 +81,7 @@ export const ResumeComponent = ({
 }) => {
   const [contactData] = useAtom(contactDataAtom);
   const [experiences] = useAtom(experiencesAtom);
-  const [education] = useAtom(educationAtom);
+  const [educations] = useAtom(educationsAtom);
   const [skills] = useAtom(skillsAtom);
   const [summary] = useAtom(summaryAtom);
 
@@ -153,20 +153,23 @@ export const ResumeComponent = ({
         title="Education"
         onClick={() => setEducationModalOpen(true)}
       >
-        <div className="flex justify-between items-start">
-          <div>
-            <h3 className="font-medium text-gray-900">
-              {education.institution}
-            </h3>
-            <p className="text-gray-700">
-              {education.degree} in {education.field}
-            </p>
+        {educations.map((edu, index) => (
+          <div
+            className="flex justify-between items-start"
+            key={edu.institution + index}
+          >
+            <div>
+              <h3 className="font-medium text-gray-900">{edu.institution}</h3>
+              <p className="text-gray-700">
+                {edu.degree} in {edu.field}
+              </p>
+            </div>
+            <div className="text-right">
+              <p className="text-gray-600">{edu.location}</p>
+              <p className="text-sm text-gray-500">{edu.dates}</p>
+            </div>
           </div>
-          <div className="text-right">
-            <p className="text-gray-600">{education.location}</p>
-            <p className="text-sm text-gray-500">{education.dates}</p>
-          </div>
-        </div>
+        ))}
       </ResumeSection>
       <ContactModal />
       <ExperienceModal />
