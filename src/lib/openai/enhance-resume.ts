@@ -1,13 +1,19 @@
+import "server-only";
+
 import { ResumeSectionType } from "@/type/resume";
 import { openai } from ".";
 
-export const enhanceResume = async (content: string, section: ResumeSectionType) => {
+export const enhanceResume = async (
+  content: string,
+  section: ResumeSectionType,
+) => {
   const aiResponse = await openai.chat.completions.create({
-    model: "gpt-4",
+    model: "deepseek/deepseek-r1-distill-llama-70b:free",
     messages: [
       {
         role: "system",
-        content: "You are an expert at improving professional resumes.",
+        content:
+          "You are an expert at improving professional resumes. Respond with only the improved text—no explanations, no preambles, no extra words.",
       },
       {
         role: "user",
@@ -16,5 +22,5 @@ export const enhanceResume = async (content: string, section: ResumeSectionType)
     ],
   });
 
-  return aiResponse.choices[0]?.message.content;
+  return aiResponse.choices[0]?.message.content?.split("\n").pop();
 };

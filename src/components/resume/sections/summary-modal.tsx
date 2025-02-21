@@ -24,11 +24,18 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import { aiEnhanceResumeAction } from "@/actions/resume";
+import { ResumeSectionType } from "@/type/resume";
+import { useCallback, useState, useTransition } from "react";
 
 export function SummaryModal() {
   const [isOpen, setOpen] = useAtom(summaryModalOpenAtom);
 
   const [summary, setSummary] = useAtom(summaryAtom);
+
+  const [aiSummary, setAiSummary] = useState<string>();
+
+  const [isPending, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof summarySchema>>({
     resolver: zodResolver(summarySchema),
@@ -39,6 +46,21 @@ export function SummaryModal() {
     setSummary(values);
     setOpen(false);
   }
+
+  const enhanceSummary = useCallback(
+    async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      e.preventDefault();
+      startTransition(async () => {
+        const result = await aiEnhanceResumeAction(
+          form.getValues().text,
+          ResumeSectionType.Summary,
+        );
+
+        setAiSummary(result);
+      });
+    },
+    [form],
+  );
 
   return (
     <Dialog open={isOpen} onOpenChange={setOpen}>
@@ -52,7 +74,9 @@ export function SummaryModal() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Left - Textarea */}
               <div className="flex-1 p-4 bg-gray-100 rounded-2xl">
-                <h2 className="text-base font-semibold mb-2">Current Version</h2>
+                <h2 className="text-base font-semibold mb-2">
+                  Current Version
+                </h2>
 
                 <FormField
                   control={form.control}
@@ -75,7 +99,11 @@ export function SummaryModal() {
               {/* Right - AI Enhance Button */}
               <div className="flex-1 flex justify-center items-center">
                 <div className="w-full md:w-[300px] h-full flex items-center justify-center rounded-2xl bg-gradient-to-r from-orange-300 to-orange-100">
-                  <Button className="bg-white text-orange-500 font-semibold">
+                  <Button
+                    className="bg-white text-orange-500 font-semibold"
+                    onClick={enhanceSummary}
+                    disabled={isPending}
+                  >
                     AI Enhance Summary
                   </Button>
                 </div>

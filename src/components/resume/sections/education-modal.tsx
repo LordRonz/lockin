@@ -74,8 +74,8 @@ export function EducationModal() {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             {fields.map((field, index) => (
-              <>
-                <div key={field.id} className="relative rounded-lg space-y-4">
+              <div key={field.id}>
+                <div className="relative rounded-lg space-y-4">
                   <FormField
                     control={form.control}
                     name={`educations.${index}.level`}
@@ -178,7 +178,7 @@ export function EducationModal() {
                 {index < fields.length - 1 && (
                   <Separator className="bg-orange-400 h-1 rounded-2xl" />
                 )}
-              </>
+              </div>
             ))}
 
             <div className="flex justify-center">

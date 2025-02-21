@@ -69,19 +69,14 @@ export function ExperienceModal() {
     <Dialog open={isOpen} onOpenChange={setOpen}>
       <DialogContent className="max-w-[80vw] max-h-[90vh] overflow-scroll">
         <DialogHeader>
-          <DialogTitle className="text-gray-900">
-            Experience
-          </DialogTitle>
+          <DialogTitle className="text-gray-900">Experience</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             {fields.map((field, index) => (
-              <>
-                <div
-                  key={field.id}
-                  className="relative border p-4 rounded-lg space-y-4"
-                >
+              <div key={field.id}>
+                <div className="relative border p-4 rounded-lg space-y-4">
                   <div className="grid grid-cols-2 gap-6">
                     <FormField
                       control={form.control}
@@ -202,7 +197,7 @@ export function ExperienceModal() {
                 {index < fields.length - 1 && (
                   <Separator className="bg-orange-400 h-1 rounded-2xl" />
                 )}
-              </>
+              </div>
             ))}
 
             {/* Add New Experience Button */}

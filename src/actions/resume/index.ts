@@ -1,3 +1,5 @@
+"use server";
+
 import { db } from "@/db";
 import { resumes } from "@/db/schema";
 import { getUser } from "@/lib/auth/get-user";
@@ -18,6 +20,9 @@ export async function submitResumeAction(data: submitResumeProps) {
   };
 }
 
-export async function aiEnhanceResumeAction(content: string, section: ResumeSectionType) {
+export async function aiEnhanceResumeAction(
+  content: string,
+  section: ResumeSectionType,
+) {
   return enhanceResume(content, section);
 }
