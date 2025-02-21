@@ -66,7 +66,7 @@ export function EducationModal() {
 
   return (
     <Dialog open={isOpen} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="max-w-[80vw] max-h-[90vh] overflow-scroll">
         <DialogHeader>
           <DialogTitle className="text-gray-900">Education Details</DialogTitle>
         </DialogHeader>

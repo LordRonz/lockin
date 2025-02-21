@@ -9,7 +9,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -71,11 +70,8 @@ export function ExperienceModal() {
       <DialogContent className="max-w-[80vw] max-h-[90vh] overflow-scroll">
         <DialogHeader>
           <DialogTitle className="text-gray-900">
-            Add Work Experience
+            Experience
           </DialogTitle>
-          <DialogDescription className="text-gray-600">
-            Describe your professional experience
-          </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
