@@ -27,10 +27,21 @@ import {
 import InputWithLabel from "@/components/ui/input-with-label";
 import { Plus, Trash } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
+import { useCallback, useState, useTransition } from "react";
+import { ResumeSectionType } from "@/type/resume";
+import { aiEnhanceResumeAction } from "@/actions/resume";
+import { RegenerateButton } from "@/components/button/regenerate-button";
 
 export function ExperienceModal() {
   const [isOpen, setOpen] = useAtom(experienceModalOpenAtom);
   const [experiences, setExperiences] = useAtom(experiencesAtom);
+
+  const [experienceSummary, setExperienceSummary] = useState<{
+    [key: string]: string;
+  }>({});
+
+  const [isPending, startTransition] = useTransition();
 
   const form = useForm<{ experiences: z.infer<typeof experienceSchema>[] }>({
     resolver: zodResolver(
@@ -65,6 +76,31 @@ export function ExperienceModal() {
     setOpen(false);
   }
 
+  const enhanceExperienceDesc = useCallback(
+    async (index: number) => {
+      startTransition(async () => {
+        const result = await aiEnhanceResumeAction(
+          form.getValues().experiences[index].description,
+          ResumeSectionType.Experience,
+        );
+
+        setExperienceSummary({ ...experienceSummary, [index]: result });
+      });
+    },
+    [experienceSummary, form],
+  );
+
+  const onApply = useCallback(
+    async (index: number) => {
+      if (!experienceSummary[index]) return;
+      form.setValue(
+        `experiences.${index}.description`,
+        experienceSummary[index],
+      );
+    },
+    [experienceSummary, form],
+  );
+
   return (
     <Dialog open={isOpen} onOpenChange={setOpen}>
       <DialogContent className="max-w-[80vw] max-h-[90vh] overflow-scroll">
@@ -73,10 +109,15 @@ export function ExperienceModal() {
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
             {fields.map((field, index) => (
               <div key={field.id}>
-                <div className="relative border p-4 rounded-lg space-y-4">
+                <div
+                  className={cn(
+                    "relative rounded-lg space-y-4",
+                    fields.length > 1 && "pt-12",
+                  )}
+                >
                   <div className="grid grid-cols-2 gap-6">
                     <FormField
                       control={form.control}
@@ -156,7 +197,7 @@ export function ExperienceModal() {
 
                       <FormField
                         control={form.control}
-                        name={`experiences.${index}.dates`}
+                        name={`experiences.${index}.description`}
                         render={({ field }) => (
                           <FormItem>
                             <FormControl>
@@ -174,11 +215,52 @@ export function ExperienceModal() {
 
                     {/* Right - AI Enhance Button */}
                     <div className="flex-1 flex justify-center items-center">
-                      <div className="w-full h-full flex items-center justify-center rounded-2xl bg-gradient-to-r from-orange-300 to-orange-100">
-                        <Button className="bg-white text-orange-500 font-semibold">
-                          AI Enhance Summary
-                        </Button>
-                      </div>
+                      {experienceSummary[index] ? (
+                        <div className="flex-1 p-4 bg-white rounded-2xl outline-orange-400 outline-1">
+                          <div className="flex justify-between items-center">
+                            <h2 className="text-lg font-semibold">
+                              AI Enhanced
+                            </h2>
+                            <div className="flex space-x-4">
+                              <RegenerateButton
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  enhanceExperienceDesc(index);
+                                }}
+                                disabled={isPending}
+                              >
+                                Regenerate
+                              </RegenerateButton>
+                              <Button
+                                variant="outline"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  onApply(index);
+                                }}
+                              >
+                                Apply
+                              </Button>
+                            </div>
+                          </div>
+
+                          <div className="w-full min-h-[200px] p-3 resize-none dark:border-none border-none outline-none focus:border-none focus-visible:ring-0 shadow-none ring-0 active:border-none rounded-lg">
+                            {experienceSummary[index]}
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center rounded-2xl bg-gradient-to-r from-orange-300 to-orange-100">
+                          <Button
+                            className="bg-white text-orange-500 font-semibold"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              enhanceExperienceDesc(index);
+                            }}
+                            disabled={isPending}
+                          >
+                            AI Enhance Summary
+                          </Button>
+                        </div>
+                      )}
                     </div>
                   </div>
 

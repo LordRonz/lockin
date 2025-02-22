@@ -27,6 +27,7 @@ import {
 import { aiEnhanceResumeAction } from "@/actions/resume";
 import { ResumeSectionType } from "@/type/resume";
 import { useCallback, useState, useTransition } from "react";
+import { RegenerateButton } from "@/components/button/regenerate-button";
 
 export function SummaryModal() {
   const [isOpen, setOpen] = useAtom(summaryModalOpenAtom);
@@ -62,9 +63,18 @@ export function SummaryModal() {
     [form],
   );
 
+  const onApply = useCallback(
+    async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      e.preventDefault();
+      if (!aiSummary) return;
+      form.setValue("text", aiSummary);
+    },
+    [aiSummary, form],
+  );
+
   return (
     <Dialog open={isOpen} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="max-w-[80vw] max-h-[90vh]">
         <DialogHeader>
           <DialogTitle className="text-gray-900">Summary</DialogTitle>
         </DialogHeader>
@@ -98,15 +108,38 @@ export function SummaryModal() {
 
               {/* Right - AI Enhance Button */}
               <div className="flex-1 flex justify-center items-center">
-                <div className="w-full md:w-[300px] h-full flex items-center justify-center rounded-2xl bg-gradient-to-r from-orange-300 to-orange-100">
-                  <Button
-                    className="bg-white text-orange-500 font-semibold"
-                    onClick={enhanceSummary}
-                    disabled={isPending}
-                  >
-                    AI Enhance Summary
-                  </Button>
-                </div>
+                {aiSummary ? (
+                  <div className="flex-1 p-4 bg-white rounded-2xl outline-orange-400 outline-1">
+                    <div className="flex justify-between items-center">
+                      <h2 className="text-lg font-semibold">AI Enhanced</h2>
+                      <div className="flex space-x-4">
+                        <RegenerateButton
+                          onClick={enhanceSummary}
+                          disabled={isPending}
+                        >
+                          Regenerate
+                        </RegenerateButton>
+                        <Button variant="outline" onClick={onApply}>
+                          Apply
+                        </Button>
+                      </div>
+                    </div>
+
+                    <div className="w-full min-h-[200px] p-3 resize-none dark:border-none border-none outline-none focus:border-none focus-visible:ring-0 shadow-none ring-0 active:border-none rounded-lg">
+                      {aiSummary}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center rounded-2xl bg-gradient-to-r from-orange-300 to-orange-100">
+                    <Button
+                      className="bg-white text-orange-500 font-semibold"
+                      onClick={enhanceSummary}
+                      disabled={isPending}
+                    >
+                      AI Enhance Summary
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
 

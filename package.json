@@ -29,7 +29,7 @@
     "jspdf": "^2.5.2",
     "lucide-react": "^0.475.0",
     "next": "15.1.7",
-    "openai": "^4.85.1",
+    "openai": "^4.85.3",
     "postgres": "^3.4.5",
     "react": "^19",
     "react-dom": "^19",

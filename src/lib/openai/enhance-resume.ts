@@ -8,12 +8,14 @@ export const enhanceResume = async (
   section: ResumeSectionType,
 ) => {
   const aiResponse = await openai.chat.completions.create({
+    reasoning_effort: "low",
     model: "deepseek/deepseek-r1-distill-llama-70b:free",
+    response_format: { type: "json_object" },
     messages: [
       {
         role: "system",
         content:
-          "You are an expert at improving professional resumes. Respond with only the improved text—no explanations, no preambles, no extra words.",
+          "You are an expert at improving professional resumes. Respond with only the improved text—no explanations, no preambles, no extra words. Prefix your answer with %%% so that I know it's the answer.",
       },
       {
         role: "user",
@@ -22,5 +24,5 @@ export const enhanceResume = async (
     ],
   });
 
-  return aiResponse.choices[0]?.message.content?.split("\n").pop();
+  return aiResponse.choices[0]?.message.content?.split("%%%").pop();
 };
