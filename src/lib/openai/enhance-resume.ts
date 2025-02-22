@@ -23,5 +23,5 @@ export const enhanceResume = async (
     ],
   });
 
-  return aiResponse.choices[0]?.message.content?.split("%%%").pop();
+  return aiResponse.choices[0]?.message.content?.split("%%").pop();
 };

@@ -6,6 +6,7 @@ import { resumes } from "@/db/schema";
 import { getUser } from "@/lib/auth/get-user";
 import { enhanceResume } from "@/lib/openai/enhance-resume";
 import { ResumeSectionType } from "@/type/resume";
+import { redirect } from "next/navigation";
 
 type submitResumeProps = {
   title: string;
@@ -49,5 +50,10 @@ export async function aiEnhanceResumeAction(
   content: string,
   section: ResumeSectionType,
 ) {
+  const user = await getUser();
+  if (!user) {
+    redirect('/login')
+  }
+  
   return enhanceResume(content, section);
 }
