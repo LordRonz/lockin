@@ -18,11 +18,22 @@ export const resumes = pgTable("resumes", {
   templateId: text("template_id"),
 });
 
-export const resumeRelations = relations(resumes, ({ many }) => ({
+export const contacts = pgTable("contacts", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  resumeId: uuid("resume_id").notNull(),
+  fullName: text("full_name"),
+  email: text("email").notNull(),
+  phone: text("phone"),
+  location: text("location"),
+});
+
+export const resumeRelations = relations(resumes, ({ many, one }) => ({
   sections: many(sections),
   experiences: many(experiences),
   educations: many(educations),
   skills: many(skills),
+  contact: one(contacts),
+  summary: one(summary),
 }));
 
 export const sections = pgTable("sections", {
@@ -74,5 +85,5 @@ export const templates = pgTable("templates", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull(),
   thumbnail: text("thumbnail").notNull(),
-  structure: text("structure").notNull(), // JSON string of template structure
+  structure: text("structure").notNull(),
 });

@@ -4,11 +4,13 @@ import { z } from 'zod'
 
 // Experience Schema
 export const summarySchema = z.object({
+  id: z.string().optional(),
   text: z.string().min(1, "Summary is required"),
 })
 
 // Experience Schema
 export const experienceSchema = z.object({
+  id: z.string().optional(),
   company: z.string().min(1, "Company name is required"),
   position: z.string().min(1, "Position is required"),
   location: z.string().min(1, "Location is required"),
@@ -18,6 +20,7 @@ export const experienceSchema = z.object({
 
 // Education Schema
 export const educationSchema = z.object({
+  id: z.string().optional(),
   level: z.string().min(1, "Level of education is required"),
   institution: z.string().min(1, "Institution name is required"),
   degree: z.string().min(1, "Degree is required"),

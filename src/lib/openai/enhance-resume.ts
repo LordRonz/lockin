@@ -15,7 +15,7 @@ export const enhanceResume = async (
       {
         role: "system",
         content:
-          "You are an expert at improving professional resumes. Respond with only the improved text—no explanations, no preambles, no extra words. Prefix your answer with %%% so that I know it's the answer.",
+          'You are an expert at improving professional resumes. Respond with only the improved text—no explanations, no preambles, no extra words. Prefix your answer with "%%%" so that I know it\'s the answer.',
       },
       {
         role: "user",
