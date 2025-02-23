@@ -96,7 +96,7 @@ export function SummaryModal() {
                       <FormControl>
                         <Textarea
                           placeholder="Enter your summary..."
-                          className="w-full min-h-[200px] p-3 resize-none dark:border-none border-none outline-none focus:border-none focus-visible:ring-0 shadow-none ring-0 active:border-none rounded-lg"
+                          className="w-full min-h-[40vh] p-3 resize-none dark:border-none border-none outline-none focus:border-none focus-visible:ring-0 shadow-none ring-0 active:border-none rounded-lg"
                           {...field}
                         />
                       </FormControl>
@@ -125,7 +125,7 @@ export function SummaryModal() {
                       </div>
                     </div>
 
-                    <div className="w-full min-h-[200px] p-3 resize-none dark:border-none border-none outline-none focus:border-none focus-visible:ring-0 shadow-none ring-0 active:border-none rounded-lg">
+                    <div className="w-full max-h-[40vh] overflow-scroll p-3 resize-none dark:border-none border-none outline-none focus:border-none focus-visible:ring-0 shadow-none ring-0 active:border-none rounded-lg">
                       {aiSummary}
                     </div>
                   </div>

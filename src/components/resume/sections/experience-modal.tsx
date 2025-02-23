@@ -243,7 +243,7 @@ export function ExperienceModal() {
                             </div>
                           </div>
 
-                          <div className="w-full min-h-[200px] p-3 resize-none dark:border-none border-none outline-none focus:border-none focus-visible:ring-0 shadow-none ring-0 active:border-none rounded-lg">
+                          <div className="w-full max-h-[200px] overflow-scroll p-3 resize-none dark:border-none border-none outline-none focus:border-none focus-visible:ring-0 shadow-none ring-0 active:border-none rounded-lg">
                             {experienceSummary[index]}
                           </div>
                         </div>
