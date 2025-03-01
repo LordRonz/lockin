@@ -110,16 +110,6 @@ export const saveContactAction = async (
   throw new Error("Invalid contact update");
 };
 
-// Helper functions to map client schema to DB schema
-// const mapExperienceToDB = (exp: Experience) => ({
-//   companyName: exp.company,
-//   position: exp.position,
-//   location: exp.location,
-//   startDate: exp.dates.split("-")[0].trim(),
-//   endDate: exp.dates ? null : exp.dates.split("-")[1].trim(),
-//   description: exp.description,
-// });
-
 export async function aiEnhanceResumeAction(
   content: string,
   section: ResumeSectionType,
