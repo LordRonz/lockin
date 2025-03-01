@@ -2,7 +2,14 @@
 
 import { db } from "@/db";
 import { eq } from "drizzle-orm";
-import { resumes } from "@/db/schema";
+import {
+  contacts,
+  educations,
+  experiences,
+  resumes,
+  skills,
+  summary,
+} from "@/db/schema";
 import { getUser } from "@/lib/auth/get-user";
 import { enhanceResume } from "@/lib/openai/enhance-resume";
 import { ResumeSectionType } from "@/type/resume";
@@ -36,6 +43,73 @@ export async function getResumeData(resumeId: string) {
   });
 }
 
+export const getResumeListAction = async () => {
+  const user = await getUser();
+  return db.query.resumes.findMany({
+    where: (resumes) => eq(resumes.userId, user.user.id),
+  });
+}
+
+export const createResumeAction = async () => {
+  const user = await getUser();
+  return db.insert(resumes).values({ userId: user.user.id });
+}
+
+export const saveSummaryAction = async (resumeId: string, text: string) => {
+  await db.update(summary).set({ text }).where(eq(summary.resumeId, resumeId));
+};
+
+export const saveExperienceAction = async (
+  data: typeof experiences.$inferInsert,
+) => {
+  const { id: _, ...dataWithoutId } = data;
+  await db.insert(experiences).values(data).onConflictDoUpdate({
+    target: experiences.id,
+    set: dataWithoutId,
+  });
+};
+
+export const saveEducationAction = async (
+  data: typeof educations.$inferInsert,
+) => {
+  const { id: _, ...dataWithoutId } = data;
+  await db.insert(educations).values(data).onConflictDoUpdate({
+    target: educations.id,
+    set: dataWithoutId,
+  });
+};
+
+export const saveSkillAction = async (data: typeof skills.$inferInsert) => {
+  const { id: _, ...dataWithoutId } = data;
+  await db.insert(skills).values(data).onConflictDoUpdate({
+    target: skills.id,
+    set: dataWithoutId,
+  });
+};
+
+export const saveContactAction = async (
+  data: typeof contacts.$inferInsert,
+  id?: string | null,
+  resumeId?: string | null,
+) => {
+  if (!id) {
+    const { id: _, ...dataWithoutId } = data;
+    await db.insert(contacts).values(data).onConflictDoUpdate({
+      target: contacts.id,
+      set: dataWithoutId,
+    });
+    return;
+  }
+  if (resumeId) {
+    await db
+      .update(contacts)
+      .set(data)
+      .where(eq(contacts.resumeId, resumeId as string));
+    return;
+  }
+  throw new Error("Invalid contact update");
+};
+
 // Helper functions to map client schema to DB schema
 // const mapExperienceToDB = (exp: Experience) => ({
 //   companyName: exp.company,
@@ -52,8 +126,8 @@ export async function aiEnhanceResumeAction(
 ) {
   const user = await getUser();
   if (!user) {
-    redirect('/login')
+    redirect("/login");
   }
-  
+
   return enhanceResume(content, section);
 }
