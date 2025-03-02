@@ -10,4 +10,18 @@ const compat = new FlatCompat({
     recommendedConfig: js.configs.recommended,
     allConfig: js.configs.all
 });
-export default [...compat.extends("next/core-web-vitals", "next/typescript")];
+
+export default [
+    ...compat.extends("next/core-web-vitals", "next/typescript"),
+    {
+        rules: {
+            "@typescript-eslint/no-unused-vars": [
+                "error",
+                {
+                    "varsIgnorePattern": "^_", // Ignore variables that start with `_`
+                    "argsIgnorePattern": "^_"  // Ignore function parameters that start with `_`
+                }
+            ]
+        }
+    }
+];

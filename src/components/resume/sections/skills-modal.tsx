@@ -35,7 +35,7 @@ export function SkillsModal() {
   const form = useForm<{ skillsInput: string }>({
     resolver: zodResolver(
       z.object({
-        skillsInput: z.string().optional(),
+        skillsInput: z.string(),
       }),
     ),
     defaultValues: {
