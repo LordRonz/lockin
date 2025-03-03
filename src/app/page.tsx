@@ -1,6 +1,7 @@
 // app/page.tsx
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import Link from "next/link";
 import { SVGProps } from "react";
 
 export default function Home() {
@@ -28,12 +29,14 @@ export default function Home() {
             </h1>
 
             <div className="flex justify-center gap-4 mt-8">
-              <Button
-                size="lg"
-                className="bg-blue-600 hover:bg-blue-700 px-8 py-6 text-lg"
-              >
-                Start Building Free
-              </Button>
+              <Link href="/resume">
+                <Button
+                  size="lg"
+                  className="bg-blue-600 hover:bg-blue-700 px-8 py-6 text-lg"
+                >
+                  Start Building Free
+                </Button>
+              </Link>
               <Button size="lg" variant="outline" className="px-8 py-6 text-lg">
                 See Examples
               </Button>
