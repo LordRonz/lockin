@@ -25,10 +25,19 @@ import {
   contactSchema,
 } from "@/lib/store/contact";
 import InputWithLabel from "@/components/ui/input-with-label";
+import { useTransition } from "react";
+import {
+  createResumeAction,
+  getResumeListAction,
+  saveContactAction,
+} from "@/actions/resume";
+import { resumeAtom } from "@/lib/store/resume";
 
 export function ContactModal() {
   const [isOpen, setOpen] = useAtom(contactModalOpenAtom);
   const [contactData, setContactData] = useAtom(contactDataAtom);
+  const [resumeData, setResumeData] = useAtom(resumeAtom);
+  const [isPending, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof contactSchema>>({
     resolver: zodResolver(contactSchema),
@@ -36,8 +45,23 @@ export function ContactModal() {
   });
 
   function onSubmit(values: z.infer<typeof contactSchema>) {
-    setContactData(values);
-    setOpen(false);
+    startTransition(async () => {
+      let resumeId = resumeData?.id;
+      if (!resumeData?.id) {
+        await createResumeAction();
+        const resumes = await getResumeListAction();
+        setResumeData(resumes[0]);
+        resumeId = resumes[0].id;
+      }
+      await saveContactAction(
+        { ...values, resumeId: resumeId ?? "" },
+        contactData.id,
+        resumeId,
+      );
+
+      setContactData(values);
+      setOpen(false);
+    });
   }
 
   return (
@@ -160,6 +184,7 @@ export function ContactModal() {
               <Button
                 type="submit"
                 className="bg-orange-400 hover:bg-orange-500 text-white"
+                disabled={isPending}
               >
                 Save
               </Button>

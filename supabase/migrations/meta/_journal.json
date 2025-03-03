@@ -8,6 +8,13 @@
       "when": 1737878229924,
       "tag": "0000_complete_talisman",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1740997922271,
+      "tag": "0001_youthful_ultimatum",
+      "breakpoints": true
     }
   ]
 }

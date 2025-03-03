@@ -52,7 +52,7 @@ export const getResumeListAction = async () => {
 
 export const createResumeAction = async () => {
   const user = await getUser();
-  return db.insert(resumes).values({ userId: user.user.id });
+  return db.insert(resumes).values({ userId: user.user.id }).returning();
 }
 
 export const saveSummaryAction = async (resumeId: string, text: string) => {
