@@ -14,7 +14,6 @@ export default async function ResumePage() {
         <main className="flex-1 overflow-auto">
           <ResumeListPage resumes={resumes} />
         </main>
-        <ResumeSidebar />
       </div>
     </ResumeProvider>
   );
