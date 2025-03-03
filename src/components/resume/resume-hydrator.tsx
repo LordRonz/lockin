@@ -1,7 +1,6 @@
 // components/ResumeHydrator.tsx
 "use client";
 
-import { useHydrateAtoms } from "jotai/utils";
 import {
   experiencesAtom,
   educationsAtom,
@@ -9,18 +8,64 @@ import {
   summaryAtom,
   Experience,
   Education,
+  resumeAtom,
+  initialExperiences,
+  initialEducations,
+  initialSkills,
+  initialSummary,
 } from "@/lib/store/resume";
-import { contactDataAtom } from "@/lib/store/contact";
-import { educations, experiences } from "@/db/schema";
+import {
+  ContactData,
+  contactDataAtom,
+  initialContactData,
+} from "@/lib/store/contact";
+import {
+  contacts,
+  educations,
+  experiences,
+  resumes,
+  skills,
+  summary,
+} from "@/db/schema";
+import { useSetAtom } from "jotai";
+import { useEffect } from "react";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function ResumeHydrator({ data }: { data: any }) {
-  useHydrateAtoms([
-    [contactDataAtom, data.contact],
-    [experiencesAtom, data.experiences.map(mapExperienceFromDB)],
-    [educationsAtom, data.educations.map(mapEducationFromDB)],
-    [skillsAtom, data.skills],
-    [summaryAtom, data.summary],
+export type ResumeData = typeof resumes.$inferSelect & {
+  experiences: (typeof experiences.$inferSelect)[];
+  educations: (typeof educations.$inferSelect)[];
+  skills: (typeof skills.$inferSelect)[];
+  summary: typeof summary.$inferSelect;
+  contact: typeof contacts.$inferSelect;
+};
+
+export default function ResumeHydrator({ data }: { data?: ResumeData }) {
+  const setResume = useSetAtom(resumeAtom);
+  const setContact = useSetAtom(contactDataAtom);
+  const setExperiences = useSetAtom(experiencesAtom);
+  const setEducations = useSetAtom(educationsAtom);
+  const setSkills = useSetAtom(skillsAtom);
+  const setSummary = useSetAtom(summaryAtom);
+
+  useEffect(() => {
+    if (!data) return;
+
+    setResume(data);
+    setContact(mapContactFromDB(data.contact) ?? initialContactData);
+    setExperiences(
+      data.experiences.map(mapExperienceFromDB) ?? initialExperiences,
+    );
+    setEducations(data.educations.map(mapEducationFromDB) ?? initialEducations);
+    setSkills(data.skills.map(mapSkillsFromDB) ?? initialSkills);
+    setSummary(data.summary ?? initialSummary);
+  }, [
+    data,
+    data?.id,
+    setResume,
+    setContact,
+    setExperiences,
+    setEducations,
+    setSkills,
+    setSummary,
   ]);
 
   return null;
@@ -49,3 +94,20 @@ const mapEducationFromDB = (
   degree: edu.degree || "",
   level: edu.location || "",
 });
+
+const mapContactFromDB = (
+  contact?: typeof contacts.$inferSelect,
+): ContactData | undefined | null =>
+  contact
+    ? {
+        id: contact.id,
+        fullName: contact.fullName || "",
+        email: contact.email || "",
+        phone: contact.phone || "",
+        location: contact.location || "",
+      }
+    : contact;
+
+const mapSkillsFromDB = (skill: typeof skills.$inferSelect) => {
+  return skill.name;
+};

@@ -13,7 +13,7 @@ export const contactSchema = z.object({
 export type ContactData = z.infer<typeof contactSchema>
 
 // Initial state
-const initialContactData: ContactData = {
+export const initialContactData: ContactData = {
   fullName: "Unidentified Giraffe",
   email: "example@example.com",
   phone: "+1 6969696969",

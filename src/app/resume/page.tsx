@@ -1,7 +1,6 @@
 import { getResumeListAction } from "@/actions/resume";
 import { ResumeHeader } from "@/components/resume/resume-header";
 import ResumeListPage from "@/components/resume/resume-list";
-import { ResumeSidebar } from "@/components/resume/resume-sidebar";
 import { ResumeProvider } from "@/context/resume-context";
 
 export default async function ResumePage() {

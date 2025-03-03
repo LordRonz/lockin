@@ -51,7 +51,7 @@ export type Skills = z.infer<typeof skillsSchema>;
 export type Summary = z.infer<typeof summarySchema>;
 
 // Initial States
-const initialExperiences: Experience[] = [
+export const initialExperiences: Experience[] = [
   {
     company: "Company A",
     position: "Sales Representative",
@@ -61,7 +61,7 @@ const initialExperiences: Experience[] = [
   },
 ];
 
-const initialEducations: Education[] = [
+export const initialEducations: Education[] = [
   {
     level: "Undergraduate",
     institution: "Graduated School",
@@ -72,9 +72,9 @@ const initialEducations: Education[] = [
   },
 ];
 
-const initialSkills: Skills = ["Skill 1", "Skill 2", "Skill 3", "Skill 4"];
+export const initialSkills: Skills = ["Skill 1", "Skill 2", "Skill 3", "Skill 4"];
 
-const initialSummary: Summary = {
+export const initialSummary: Summary = {
   text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut purus eget sapien.",
 };
 

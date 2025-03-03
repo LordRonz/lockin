@@ -38,7 +38,6 @@ export async function getResumeData(resumeId: string) {
       educations: true,
       skills: true,
       summary: true,
-      sections: true,
     },
   });
 }
