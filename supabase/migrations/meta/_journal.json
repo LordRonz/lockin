@@ -15,6 +15,27 @@
       "when": 1740997922271,
       "tag": "0001_youthful_ultimatum",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1741007635824,
+      "tag": "0002_spicy_strong_guy",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1741007772302,
+      "tag": "0003_far_wilson_fisk",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1741008668735,
+      "tag": "0004_unique_barracuda",
+      "breakpoints": true
     }
   ]
 }

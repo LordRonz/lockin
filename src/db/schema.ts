@@ -20,21 +20,15 @@ export const resumes = pgTable("resumes", {
 
 export const contacts = pgTable("contacts", {
   id: uuid("id").defaultRandom().primaryKey(),
-  resumeId: uuid("resume_id").notNull(),
+  resumeId: uuid("resume_id")
+    .notNull()
+    .references(() => resumes.id)
+    .unique(),
   fullName: text("full_name"),
   email: text("email").notNull(),
   phone: text("phone"),
   location: text("location"),
 });
-
-export const resumeRelations = relations(resumes, ({ many, one }) => ({
-  sections: many(sections),
-  experiences: many(experiences),
-  educations: many(educations),
-  skills: many(skills),
-  contact: one(contacts),
-  summary: one(summary),
-}));
 
 export const sections = pgTable("sections", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -44,9 +38,18 @@ export const sections = pgTable("sections", {
   isVisible: boolean("is_visible").default(true),
 });
 
+export const sectionsRelation = relations(sections, ({ one }) => ({
+  resume: one(resumes, {
+    fields: [sections.resumeId],
+    references: [resumes.id],
+  }),
+}));
+
 export const experiences = pgTable("experiences", {
   id: uuid("id").defaultRandom().primaryKey(),
-  resumeId: uuid("resume_id").notNull(),
+  resumeId: uuid("resume_id")
+    .notNull()
+    .references(() => resumes.id),
   companyName: text("company_name"),
   location: text("location"),
   position: text("position"),
@@ -56,9 +59,18 @@ export const experiences = pgTable("experiences", {
   description: text("description"),
 });
 
+export const experiencesRelation = relations(experiences, ({ one }) => ({
+  resume: one(resumes, {
+    fields: [experiences.resumeId],
+    references: [resumes.id],
+  }),
+}));
+
 export const educations = pgTable("educations", {
   id: uuid("id").defaultRandom().primaryKey(),
-  resumeId: uuid("resume_id").notNull(),
+  resumeId: uuid("resume_id")
+    .notNull()
+    .references(() => resumes.id),
   school: text("school"),
   degree: text("degree"),
   fieldOfStudy: text("field_of_study"),
@@ -68,6 +80,13 @@ export const educations = pgTable("educations", {
   description: text("description"),
 });
 
+export const educationsRelation = relations(educations, ({ one }) => ({
+  resume: one(resumes, {
+    fields: [educations.resumeId],
+    references: [resumes.id],
+  }),
+}));
+
 export const skills = pgTable("skills", {
   id: uuid("id").defaultRandom().primaryKey(),
   resumeId: uuid("resume_id").notNull(),
@@ -75,9 +94,19 @@ export const skills = pgTable("skills", {
   level: text("level"),
 });
 
+export const skillsRelation = relations(skills, ({ one }) => ({
+  resume: one(resumes, {
+    fields: [skills.resumeId],
+    references: [resumes.id],
+  }),
+}));
+
 export const summary = pgTable("summary", {
   id: uuid("id").defaultRandom().primaryKey(),
-  resumeId: uuid("resume_id").notNull(),
+  resumeId: uuid("resume_id")
+    .notNull()
+    .references(() => resumes.id)
+    .unique(),
   text: text("text").notNull(),
 });
 
@@ -87,3 +116,20 @@ export const templates = pgTable("templates", {
   thumbnail: text("thumbnail").notNull(),
   structure: text("structure").notNull(),
 });
+
+export const resumeRelations = relations(resumes, ({ many, one }) => ({
+  sections: many(sections),
+  experiences: many(experiences),
+  educations: many(educations),
+  skills: many(skills),
+  contact: one(contacts, {
+    fields: [resumes.id],
+    references: [contacts.resumeId],
+    relationName: "resume_contact",
+  }),
+  summary: one(summary, {
+    fields: [resumes.id],
+    references: [summary.resumeId],
+    relationName: "resume_summary",
+  }),
+}));
