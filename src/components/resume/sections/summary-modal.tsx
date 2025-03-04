@@ -28,6 +28,9 @@ import { aiEnhanceResumeAction } from "@/actions/resume";
 import { ResumeSectionType } from "@/type/resume";
 import { useCallback, useState, useTransition } from "react";
 import { RegenerateButton } from "@/components/button/regenerate-button";
+import { cn } from "@/lib/utils";
+import { Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
 
 export function SummaryModal() {
   const [isOpen, setOpen] = useAtom(summaryModalOpenAtom);
@@ -51,6 +54,7 @@ export function SummaryModal() {
   const enhanceSummary = useCallback(
     async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       e.preventDefault();
+      if (isPending) return;
       startTransition(async () => {
         const result = await aiEnhanceResumeAction(
           form.getValues().text,
@@ -130,13 +134,37 @@ export function SummaryModal() {
                     </div>
                   </div>
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center rounded-2xl bg-gradient-to-r from-orange-300 to-orange-100">
+                  <div
+                    className={cn(
+                      "w-full h-full flex items-center justify-center rounded-2xl transition-colors duration-1000",
+                      !isPending &&
+                        "has-hover:bg-radial has-hover:from-10% has-hover:via-50% has-hover:from-orange-200 has-hover:to-white has-hover:via-orange-100",
+                      !isPending &&
+                        "bg-radial from-10% via-50% from-white to-white via-white",
+                      isPending &&
+                        "bg-radial from-10% via-50% from-orange-200 to-orange-400 via-orange-300",
+                    )}
+                  >
                     <Button
-                      className="bg-white text-orange-500 font-semibold"
+                      className={cn(
+                        "transition-colors hover:bg-white bg-white text-black hover:text-orange-400 font-semibold",
+                        isPending && "text-orange-400",
+                      )}
                       onClick={enhanceSummary}
-                      disabled={isPending}
                     >
-                      AI Enhance Summary
+                      <Sparkles className={cn(isPending && "animate-pulse")} />
+                      <motion.div
+                        initial={false}
+                        animate={{ width: isPending ? 80 : 180 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 200,
+                          damping: 15,
+                        }}
+                        className="overflow-hidden"
+                      >
+                        {!isPending ? "AI Enhance Summary" : "Loading..."}
+                      </motion.div>
                     </Button>
                   </div>
                 )}

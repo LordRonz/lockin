@@ -27,21 +27,16 @@ interface ResumeSectionProps {
 
 const ResumeSection = ({ title, children, onClick }: ResumeSectionProps) => (
   <section
-    className="group p-4 transition-all
-               hover:shadow-md
-               cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-blue-300 hover:ring-orange-200 hover:ring-2 rounded-lg"
+    className="group p-4 transition-colors
+               duration-500
+               cursor-pointer text-black hover:text-orange-400 focus:outline-hidden focus:ring-2 focus:ring-blue-300 hover:bg-orange-50 hover:ring-orange-50 active:ring-orange-300 hover:ring-1 rounded-lg"
     tabIndex={0}
     onClick={onClick}
   >
-    <h2
-      className={cn(
-        "text-xl font-semibold mb-4 text-gray-800",
-        !title && "hidden",
-      )}
-    >
+    <h2 className={cn("text-xl font-semibold mb-4", !title && "hidden")}>
       {title}
     </h2>
-    <div className="text-gray-600 space-y-4">{children}</div>
+    <div className="space-y-4">{children}</div>
   </section>
 );
 
@@ -103,16 +98,14 @@ export const ResumeComponent = ({
       className="max-w-3xl mx-auto my-8 p-4 bg-neutral-50 rounded-4xl"
     >
       <ResumeSection onClick={() => setContactModalOpen(true)}>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+        <h1 className="text-3xl font-bold mb-2 text-inherit">
           {contactData.fullName}
         </h1>
-        <div className="flex flex-wrap items-center gap-x-4 text-gray-600">
+        <div className="flex flex-wrap items-center gap-x-4">
           {contactInfo.map((info, index) => (
             <React.Fragment key={index}>
               <span>{info}</span>
-              {index < contactInfo.length - 1 && (
-                <span className="text-gray-400">·</span>
-              )}
+              {index < contactInfo.length - 1 && <span className="">·</span>}
             </React.Fragment>
           ))}
         </div>
@@ -159,14 +152,14 @@ export const ResumeComponent = ({
             key={edu.institution + index}
           >
             <div>
-              <h3 className="font-medium text-gray-900">{edu.institution}</h3>
-              <p className="text-gray-700">
+              <h3 className="font-medium text-inherit">{edu.institution}</h3>
+              <p className="text-inherit">
                 {edu.degree} in {edu.field}
               </p>
             </div>
             <div className="text-right">
-              <p className="text-gray-600">{edu.location}</p>
-              <p className="text-sm text-gray-500">{edu.dates}</p>
+              <p className="text-inherit">{edu.location}</p>
+              <p className="text-sm text-inherit">{edu.dates}</p>
             </div>
           </div>
         ))}
