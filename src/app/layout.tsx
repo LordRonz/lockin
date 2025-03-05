@@ -21,7 +21,7 @@ export default function RootLayout({
         <body
           className={cn(
             GeistSans.variable,
-            "antialiased transition-all bg-[#F8F7F3] duration-500",
+            "antialiased transition-all bg-gray-a duration-500",
           )}
         >
           {children}

@@ -29,7 +29,7 @@ const ResumeSection = ({ title, children, onClick }: ResumeSectionProps) => (
   <section
     className="group p-4 transition-colors
                duration-500
-               cursor-pointer text-black hover:text-orange-400 focus:outline-hidden focus:ring-2 focus:ring-blue-300 hover:bg-orange-50 hover:ring-orange-50 active:ring-orange-300 hover:ring-1 rounded-lg"
+               cursor-pointer text-black-a hover:text-orange-a focus:outline-hidden focus:ring-2 focus:ring-blue-300 hover:bg-white-orange hover:ring-white-orange active:ring-orange-a hover:ring-1 rounded-lg"
     tabIndex={0}
     onClick={onClick}
   >
@@ -95,7 +95,7 @@ export const ResumeComponent = ({
   return (
     <div
       ref={ref}
-      className="max-w-3xl mx-auto my-8 p-4 bg-neutral-50 rounded-4xl"
+      className="max-w-3xl mx-auto my-8 p-4 bg-white-a border-gray-b border-1 rounded-4xl"
     >
       <ResumeSection onClick={() => setContactModalOpen(true)}>
         <h1 className="text-3xl font-bold mb-2 text-inherit">

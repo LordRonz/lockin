@@ -234,17 +234,14 @@ export function ExperienceModal() {
                   {fields.length > 1 && (
                     <Button
                       type="button"
-                      variant="destructive"
-                      className="absolute top-2 right-2"
+                      variant="ghost"
+                      className="w-full text-red-400 font-semibold hover:text-red-500 border-1 border-gray-300 rounded-2xl"
                       onClick={() => remove(index)}
                     >
-                      <Trash size={16} />
+                      Delete
                     </Button>
                   )}
                 </div>
-                {index < fields.length - 1 && (
-                  <Separator className="bg-orange-400 h-1 rounded-2xl" />
-                )}
               </div>
             ))}
 
@@ -253,7 +250,7 @@ export function ExperienceModal() {
               <Button
                 type="button"
                 variant="outline"
-                className="flex items-center justify-center gap-2 border-orange-300 rounded-xl"
+                className="w-full flex items-center justify-center gap-2 border-orange-a rounded-2xl mt-2"
                 onClick={() =>
                   append({
                     company: "",
@@ -278,7 +275,7 @@ export function ExperienceModal() {
               </Button>
               <Button
                 type="submit"
-                className="bg-orange-400 hover:bg-orange-500 text-white"
+                className="bg-orange-a hover:bg-orange-500 text-white"
               >
                 Save
               </Button>
