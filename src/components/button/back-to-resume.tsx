@@ -5,7 +5,7 @@ export default function BackToResume() {
   return (
     <Link
       href="/resume"
-      className="flex items-center gap-2 text-3xl font-semibold text-black hover:opacity-80 transition"
+      className="flex items-center gap-2 text-3xl font-semibold text-black hover:opacity-80 transition mb-8"
     >
       <ArrowLeft size={32} strokeWidth={2} />
       <span>Main Resume</span>
