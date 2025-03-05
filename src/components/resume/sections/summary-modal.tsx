@@ -27,10 +27,6 @@ import {
 import { aiEnhanceResumeAction } from "@/actions/resume";
 import { ResumeSectionType } from "@/type/resume";
 import { useCallback, useState, useTransition } from "react";
-import { RegenerateButton } from "@/components/button/regenerate-button";
-import { cn } from "@/lib/utils";
-import { Sparkles } from "lucide-react";
-import { motion } from "framer-motion";
 import { AiEnhance } from "@/components/form/ai-enhance";
 
 export function SummaryModal() {

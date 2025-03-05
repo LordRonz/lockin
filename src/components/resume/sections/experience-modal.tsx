@@ -25,13 +25,11 @@ import {
   experienceSchema,
 } from "@/lib/store/resume";
 import InputWithLabel from "@/components/ui/input-with-label";
-import { Plus, Trash } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
+import { Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCallback, useState, useTransition } from "react";
 import { ResumeSectionType } from "@/type/resume";
 import { aiEnhanceResumeAction } from "@/actions/resume";
-import { RegenerateButton } from "@/components/button/regenerate-button";
 import { AiEnhance } from "@/components/form/ai-enhance";
 
 export function ExperienceModal() {
