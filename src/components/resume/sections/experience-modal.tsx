@@ -32,6 +32,7 @@ import { useCallback, useState, useTransition } from "react";
 import { ResumeSectionType } from "@/type/resume";
 import { aiEnhanceResumeAction } from "@/actions/resume";
 import { RegenerateButton } from "@/components/button/regenerate-button";
+import { AiEnhance } from "@/components/form/ai-enhance";
 
 export function ExperienceModal() {
   const [isOpen, setOpen] = useAtom(experienceModalOpenAtom);
@@ -214,54 +215,19 @@ export function ExperienceModal() {
                     </div>
 
                     {/* Right - AI Enhance Button */}
-                    <div className="flex-1 flex justify-center items-center">
-                      {experienceSummary[index] ? (
-                        <div className="flex-1 p-4 bg-white rounded-2xl outline-orange-400 outline-1">
-                          <div className="flex justify-between items-center">
-                            <h2 className="text-lg font-semibold">
-                              AI Enhanced
-                            </h2>
-                            <div className="flex space-x-4">
-                              <RegenerateButton
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  enhanceExperienceDesc(index);
-                                }}
-                                disabled={isPending}
-                              >
-                                Regenerate
-                              </RegenerateButton>
-                              <Button
-                                variant="outline"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  onApply(index);
-                                }}
-                              >
-                                Apply
-                              </Button>
-                            </div>
-                          </div>
-
-                          <div className="w-full max-h-[200px] overflow-scroll p-3 resize-none dark:border-none border-none outline-none focus:border-none focus-visible:ring-0 shadow-none ring-0 active:border-none rounded-lg">
-                            {experienceSummary[index]}
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center rounded-2xl bg-gradient-to-r from-orange-300 to-orange-100">
-                          <Button
-                            className="bg-white text-orange-500 font-semibold"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              enhanceExperienceDesc(index);
-                            }}
-                            disabled={isPending}
-                          >
-                            AI Enhance Summary
-                          </Button>
-                        </div>
-                      )}
-                    </div>
+                    <AiEnhance
+                      aiResult={experienceSummary[index]}
+                      enhance={(e) => {
+                        e.preventDefault();
+                        enhanceExperienceDesc(index);
+                      }}
+                      onApply={(e) => {
+                        e.preventDefault();
+                        onApply(index);
+                      }}
+                      isPending={isPending}
+                      buttonText="AI Enhance Experience"
+                    />
                   </div>
 
                   {/* Remove Button */}

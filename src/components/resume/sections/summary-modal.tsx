@@ -31,6 +31,7 @@ import { RegenerateButton } from "@/components/button/regenerate-button";
 import { cn } from "@/lib/utils";
 import { Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
+import { AiEnhance } from "@/components/form/ai-enhance";
 
 export function SummaryModal() {
   const [isOpen, setOpen] = useAtom(summaryModalOpenAtom);
@@ -111,64 +112,13 @@ export function SummaryModal() {
               </div>
 
               {/* Right - AI Enhance Button */}
-              <div className="flex-1 flex justify-center items-center">
-                {aiSummary ? (
-                  <div className="flex-1 p-4 bg-white rounded-2xl outline-orange-400 outline-1">
-                    <div className="flex justify-between items-center">
-                      <h2 className="text-lg font-semibold">AI Enhanced</h2>
-                      <div className="flex space-x-4">
-                        <RegenerateButton
-                          onClick={enhanceSummary}
-                          disabled={isPending}
-                        >
-                          Regenerate
-                        </RegenerateButton>
-                        <Button variant="outline" onClick={onApply}>
-                          Apply
-                        </Button>
-                      </div>
-                    </div>
-
-                    <div className="w-full max-h-[40vh] overflow-scroll p-3 resize-none dark:border-none border-none outline-none focus:border-none focus-visible:ring-0 shadow-none ring-0 active:border-none rounded-lg">
-                      {aiSummary}
-                    </div>
-                  </div>
-                ) : (
-                  <div
-                    className={cn(
-                      "w-full h-full flex items-center justify-center rounded-2xl transition-colors duration-1000",
-                      !isPending &&
-                        "has-hover:bg-radial has-hover:from-10% has-hover:via-50% has-hover:from-orange-200 has-hover:to-white has-hover:via-orange-100",
-                      !isPending &&
-                        "bg-radial from-10% via-50% from-white to-white via-white",
-                      isPending &&
-                        "bg-radial from-10% via-50% from-orange-200 to-orange-400 via-orange-300",
-                    )}
-                  >
-                    <Button
-                      className={cn(
-                        "transition-colors hover:bg-white bg-white text-black hover:text-orange-400 font-semibold",
-                        isPending && "text-orange-400",
-                      )}
-                      onClick={enhanceSummary}
-                    >
-                      <Sparkles className={cn(isPending && "animate-pulse")} />
-                      <motion.div
-                        initial={false}
-                        animate={{ width: isPending ? 80 : 180 }}
-                        transition={{
-                          type: "spring",
-                          stiffness: 200,
-                          damping: 15,
-                        }}
-                        className="overflow-hidden"
-                      >
-                        {!isPending ? "AI Enhance Summary" : "Loading..."}
-                      </motion.div>
-                    </Button>
-                  </div>
-                )}
-              </div>
+              <AiEnhance
+                onApply={onApply}
+                isPending={isPending}
+                aiResult={aiSummary}
+                enhance={enhanceSummary}
+                buttonText="AI Enhance Summary"
+              />
             </div>
 
             {/* Footer Buttons */}
