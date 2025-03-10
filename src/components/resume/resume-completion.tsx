@@ -1,14 +1,10 @@
-import { useMemo, useState } from "react";
-import { Progress } from "@/components/ui/progress";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { useMemo } from "react";
 import { Card } from "../ui/card";
 import { cn } from "@/lib/utils";
 import { CheckIcon } from "lucide-react";
 import {
   educationsAtom,
   experiencesAtom,
-  isAllAtomPopulated,
   resumeAtom,
   skillsAtom,
   summaryAtom,
@@ -34,13 +30,6 @@ export default function ResumeCompletion() {
     };
   }, [resume, summary, experiences, skills, educations]);
 
-  const allDone = isAllAtomPopulated();
-
-  const progress =
-    (Object.values(completedSections).filter(Boolean).length /
-      sections.length) *
-    100;
-
   return (
     <Card className="p-4 space-y-2 rounded-4xl w-full">
       <div className="pt-4">
@@ -52,9 +41,7 @@ export default function ResumeCompletion() {
               "hover:bg-white-orange",
             )}
           >
-            <span
-              className={`font-medium group-hover:text-orange-a`}
-            >
+            <span className={`font-medium group-hover:text-orange-a`}>
               {section}
             </span>
 

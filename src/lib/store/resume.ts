@@ -92,7 +92,7 @@ export const educationModalOpenAtom = atom(false);
 export const skillsModalOpenAtom = atom(false);
 export const summaryModalOpenAtom = atom(false);
 
-export const isAllAtomPopulated = () => {
+export const useAllAtomPopulated = () => {
   const experiences = useAtomValue(experiencesAtom);
   const educations = useAtomValue(educationsAtom);
   const skills = useAtomValue(skillsAtom);
