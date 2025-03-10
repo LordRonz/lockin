@@ -1,6 +1,7 @@
 // src/lib/store/resume.ts
-import { atom } from "jotai";
+import { atom, useAtomValue } from "jotai";
 import { z } from "zod";
+import { contactDataAtom } from "./contact";
 
 export const resumeSchema = z.object({
   id: z.string().uuid().optional(),
@@ -90,3 +91,34 @@ export const experienceModalOpenAtom = atom(false);
 export const educationModalOpenAtom = atom(false);
 export const skillsModalOpenAtom = atom(false);
 export const summaryModalOpenAtom = atom(false);
+
+export const useAllAtomPopulated = () => {
+  const experiences = useAtomValue(experiencesAtom);
+  const educations = useAtomValue(educationsAtom);
+  const skills = useAtomValue(skillsAtom);
+  const summary = useAtomValue(summaryAtom);
+  const contact = useAtomValue(contactDataAtom);
+
+  return (
+    experiences.length > 0 &&
+    experiences.every(
+      (exp) => exp.company && exp.position && exp.location && exp.dates && exp.description
+    ) &&
+    educations.length > 0 &&
+    educations.every(
+      (edu) =>
+        edu.level &&
+        edu.institution &&
+        edu.degree &&
+        edu.field &&
+        edu.location &&
+        edu.dates
+    ) &&
+    skills.length > 0 &&
+    summary.text.trim().length > 0 &&
+    contact.phone &&
+    contact.email &&
+    contact.location &&
+    contact.fullName
+  );
+};

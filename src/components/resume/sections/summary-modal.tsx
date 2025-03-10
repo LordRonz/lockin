@@ -61,7 +61,7 @@ export function SummaryModal() {
         setAiSummary(result);
       });
     },
-    [form],
+    [form, isPending],
   );
 
   const onApply = useCallback(
