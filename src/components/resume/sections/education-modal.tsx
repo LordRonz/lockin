@@ -1,37 +1,43 @@
 // src/components/education-modal.tsx
-"use client";
+'use client';
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useFieldArray, useForm } from "react-hook-form";
-import { useAtom } from "jotai";
-import * as z from "zod";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useFieldArray, useForm } from 'react-hook-form';
+import { useAtom } from 'jotai';
+import * as z from 'zod';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from "@/components/ui/form";
+} from '@/components/ui/form';
 import {
   educationModalOpenAtom,
   educationsAtom,
   educationSchema,
-} from "@/lib/store/resume";
-import { Plus, Trash } from "lucide-react";
-import InputWithLabel from "@/components/ui/input-with-label";
-import { Separator } from "@/components/ui/separator";
+  resumeAtom,
+} from '@/lib/store/resume';
+import { Loader2, Plus, Trash } from 'lucide-react';
+import InputWithLabel from '@/components/ui/input-with-label';
+import { Separator } from '@/components/ui/separator';
+import { saveEducationAction } from '@/actions/resume';
+import { useEffect, useTransition } from 'react';
+import { mapEducationToDB } from '@/actions/resume/helper';
+import { cn } from '@/lib/utils';
 
 export function EducationModal() {
   const [isOpen, setOpen] = useAtom(educationModalOpenAtom);
   const [educations, setEducations] = useAtom(educationsAtom);
-
+  const [resume] = useAtom(resumeAtom);
+  const [isPending, startTransition] = useTransition();
   const form = useForm<{ educations: z.infer<typeof educationSchema>[] }>({
     resolver: zodResolver(
       z.object({
@@ -43,12 +49,12 @@ export function EducationModal() {
         ? educations
         : [
             {
-              level: "",
-              institution: "",
-              degree: "",
-              field: "",
-              location: "",
-              dates: "",
+              level: '',
+              institution: '',
+              degree: '',
+              field: '',
+              location: '',
+              dates: '',
             },
           ],
     },
@@ -56,13 +62,30 @@ export function EducationModal() {
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: "educations",
+    name: 'educations',
   });
 
+  useEffect(() => {
+    form.reset({ educations });
+  }, [educations, form]);
+
   function onSubmit(values: { educations: z.infer<typeof educationSchema>[] }) {
+    if (!resume?.id) return;
+    const resumeId = resume.id;
     setEducations(values.educations);
-    setOpen(false);
+    startTransition(async () => {
+      await saveEducationAction(
+        values.educations.map((education) => ({
+          ...mapEducationToDB(education),
+          id: education.id,
+          resumeId,
+        })),
+      );
+      setOpen(false);
+    });
   }
+
+  if (isPending) return <Loader2 className={cn('animate-spin', !isPending && 'hidden')} />;
 
   return (
     <Dialog open={isOpen} onOpenChange={setOpen}>
@@ -188,12 +211,12 @@ export function EducationModal() {
                 className="flex items-center justify-center gap-2 border-orange-300 rounded-xl"
                 onClick={() =>
                   append({
-                    level: "",
-                    institution: "",
-                    degree: "",
-                    field: "",
-                    location: "",
-                    dates: "",
+                    level: '',
+                    institution: '',
+                    degree: '',
+                    field: '',
+                    location: '',
+                    dates: '',
                   })
                 }
               >

@@ -1,38 +1,41 @@
-"use client";
+'use client';
 
-import { useAtom } from "jotai";
+import { useAtom } from 'jotai';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
+} from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
 import {
+  resumeAtom,
   summaryAtom,
   summaryModalOpenAtom,
   summarySchema,
-} from "@/lib/store/resume";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+} from '@/lib/store/resume';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from "@/components/ui/form";
-import { aiEnhanceResumeAction } from "@/actions/resume";
-import { ResumeSectionType } from "@/type/resume";
-import { useCallback, useState, useTransition } from "react";
-import { AiEnhance } from "@/components/form/ai-enhance";
+} from '@/components/ui/form';
+import { aiEnhanceResumeAction, saveSummaryAction } from '@/actions/resume';
+import { ResumeSectionType } from '@/type/resume';
+import { useCallback, useEffect, useState, useTransition } from 'react';
+import { AiEnhance } from '@/components/form/ai-enhance';
 
 export function SummaryModal() {
   const [isOpen, setOpen] = useAtom(summaryModalOpenAtom);
 
   const [summary, setSummary] = useAtom(summaryAtom);
+
+  const [resume] = useAtom(resumeAtom);
 
   const [aiSummary, setAiSummary] = useState<string>();
 
@@ -43,9 +46,18 @@ export function SummaryModal() {
     defaultValues: summary,
   });
 
+  useEffect(() => {
+    form.reset(summary);
+  }, [summary, form]);
+
   function onSubmit(values: z.infer<typeof summarySchema>) {
+    if (!resume?.id) return;
+    const resumeId = resume.id;
     setSummary(values);
-    setOpen(false);
+    startTransition(async () => {
+      await saveSummaryAction({ ...values, resumeId });
+      setOpen(false);
+    });
   }
 
   const enhanceSummary = useCallback(
@@ -68,7 +80,7 @@ export function SummaryModal() {
     async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       e.preventDefault();
       if (!aiSummary) return;
-      form.setValue("text", aiSummary);
+      form.setValue('text', aiSummary);
     },
     [aiSummary, form],
   );

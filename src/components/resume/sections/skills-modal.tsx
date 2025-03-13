@@ -1,36 +1,38 @@
 // src/components/skills-modal.tsx
-"use client";
+'use client';
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useAtom } from "jotai";
-import * as z from "zod";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { useAtom } from 'jotai';
+import * as z from 'zod';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import {
-  Form,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
-import {
+  resumeAtom,
   skillsAtom,
   skillsModalOpenAtom,
   skillsSchema,
-} from "@/lib/store/resume";
-import { Badge } from "@/components/ui/badge";
-import InputWithLabel from "@/components/ui/input-with-label";
-import { XIcon } from "lucide-react";
+} from '@/lib/store/resume';
+import { Badge } from '@/components/ui/badge';
+import InputWithLabel from '@/components/ui/input-with-label';
+import { Loader2, XIcon } from 'lucide-react';
+import { useEffect, useTransition } from 'react';
+import { saveSkillAction } from '@/actions/resume';
+import { cn } from '@/lib/utils';
 
 export function SkillsModal() {
   const [isOpen, setOpen] = useAtom(skillsModalOpenAtom);
   const [skills, setSkills] = useAtom(skillsAtom);
+  const [resume] = useAtom(resumeAtom);
+
+  const [isPending, startTransition] = useTransition();
 
   const form = useForm<{ skillsInput: string }>({
     resolver: zodResolver(
@@ -39,17 +41,21 @@ export function SkillsModal() {
       }),
     ),
     defaultValues: {
-      skillsInput: "",
+      skillsInput: '',
     },
   });
 
+  useEffect(() => {
+    form.reset({ skillsInput: skills.join(', ') });
+  }, [skills, form]);
+
   const handleAddSkill = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && form.getValues("skillsInput").trim() !== "") {
-      const newSkill = form.getValues("skillsInput").trim();
+    if (e.key === 'Enter' && form.getValues('skillsInput').trim() !== '') {
+      const newSkill = form.getValues('skillsInput').trim();
       if (!skills.includes(newSkill)) {
         const updatedSkills = [...skills, newSkill];
         setSkills(updatedSkills);
-        form.setValue("skillsInput", ""); // Clear input
+        form.setValue('skillsInput', ''); // Clear input
       }
       e.preventDefault();
     }
@@ -61,19 +67,32 @@ export function SkillsModal() {
 
   const onSubmit = () => {
     try {
+      if (!resume?.id) return;
+      const resumeId = resume.id;
       // Validate against schema and save
       const validatedSkills = skillsSchema.parse(skills);
       setSkills(validatedSkills);
-      setOpen(false);
+      startTransition(async () => {
+        await saveSkillAction(
+          validatedSkills.map((skill) => ({
+            name: skill,
+            resumeId: resumeId,
+          })),
+        );
+        setOpen(false);
+      });
     } catch (error) {
       if (error instanceof z.ZodError) {
-        form.setError("skillsInput", {
-          type: "manual",
-          message: error.errors.map((err) => err.message).join(", "),
+        form.setError('skillsInput', {
+          type: 'manual',
+          message: error.errors.map((err) => err.message).join(', '),
         });
       }
     }
   };
+
+  if (isPending)
+    return <Loader2 className={cn('animate-spin', !isPending && 'hidden')} />;
 
   return (
     <Dialog open={isOpen} onOpenChange={setOpen}>
@@ -98,7 +117,7 @@ export function SkillsModal() {
                     placeholder="Type and press Enter"
                     value={field.value}
                     onChange={(e) =>
-                      form.setValue("skillsInput", e.target.value)
+                      form.setValue('skillsInput', e.target.value)
                     }
                     onKeyDown={handleAddSkill}
                     className="focus:ring-blue-500"

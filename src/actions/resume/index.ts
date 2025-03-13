@@ -1,7 +1,7 @@
-"use server";
+'use server';
 
-import { db } from "@/db";
-import { eq } from "drizzle-orm";
+import { db } from '@/db';
+import { eq } from 'drizzle-orm';
 import {
   contacts,
   educations,
@@ -9,11 +9,12 @@ import {
   resumes,
   skills,
   summary,
-} from "@/db/schema";
-import { getUser } from "@/lib/auth/get-user";
-import { enhanceResume } from "@/lib/openai/enhance-resume";
-import { ResumeSectionType } from "@/type/resume";
-import { redirect } from "next/navigation";
+} from '@/db/schema';
+import { getUser } from '@/lib/auth/get-user';
+import { enhanceResume } from '@/lib/openai/enhance-resume';
+import { buildConflictUpdateColumns } from '@/lib/db';
+import { ResumeSectionType } from '@/type/resume';
+import { redirect } from 'next/navigation';
 
 type submitResumeProps = {
   title: string;
@@ -25,7 +26,7 @@ export async function submitResumeAction(data: submitResumeProps) {
   await db.insert(resumes).values({ userId: user.user.id, ...data });
 
   return {
-    type: "RESUME_SUBMIT",
+    type: 'RESUME_SUBMIT',
   };
 }
 
@@ -47,43 +48,72 @@ export const getResumeListAction = async () => {
   return db.query.resumes.findMany({
     where: (resumes) => eq(resumes.userId, user.user.id),
   });
-}
+};
 
 export const createResumeAction = async () => {
   const user = await getUser();
   return db.insert(resumes).values({ userId: user.user.id }).returning();
-}
+};
 
-export const saveSummaryAction = async (resumeId: string, text: string) => {
-  await db.update(summary).set({ text }).where(eq(summary.resumeId, resumeId));
+export const saveSummaryAction = async (data: typeof summary.$inferInsert) => {
+  const { id: _, ...dataWithoutId } = data;
+
+  return db.insert(summary).values(data).onConflictDoUpdate({
+    target: summary.resumeId,
+    set: dataWithoutId,
+  });
 };
 
 export const saveExperienceAction = async (
-  data: typeof experiences.$inferInsert,
+  data: (typeof experiences.$inferInsert)[],
 ) => {
-  const { id: _, ...dataWithoutId } = data;
-  await db.insert(experiences).values(data).onConflictDoUpdate({
-    target: experiences.id,
-    set: dataWithoutId,
-  });
+  await db
+    .insert(experiences)
+    .values(data)
+    .onConflictDoUpdate({
+      target: experiences.id,
+      set: buildConflictUpdateColumns(experiences, [
+        'resumeId',
+        'location',
+        'companyName',
+        'current',
+        'description',
+        'startDate',
+        'endDate',
+        'position',
+      ]),
+    });
 };
 
 export const saveEducationAction = async (
-  data: typeof educations.$inferInsert,
+  data: (typeof educations.$inferInsert)[],
 ) => {
-  const { id: _, ...dataWithoutId } = data;
-  await db.insert(educations).values(data).onConflictDoUpdate({
-    target: educations.id,
-    set: dataWithoutId,
-  });
+  await db
+    .insert(educations)
+    .values(data)
+    .onConflictDoUpdate({
+      target: educations.id,
+      set: buildConflictUpdateColumns(educations, [
+        'resumeId',
+        'location',
+        'description',
+        'degree',
+        'startDate',
+        'endDate',
+        'fieldOfStudy',
+        'school',
+      ]),
+    });
 };
 
-export const saveSkillAction = async (data: typeof skills.$inferInsert) => {
-  const { id: _, ...dataWithoutId } = data;
-  await db.insert(skills).values(data).onConflictDoUpdate({
-    target: skills.id,
-    set: dataWithoutId,
-  });
+export const saveSkillAction = async (data: (typeof skills.$inferInsert)[]) => {
+  await db
+    .insert(skills)
+    .values(data)
+    .onConflictDoUpdate({
+      target: skills.id,
+      set: buildConflictUpdateColumns(skills, ['resumeId', 'name', 'level']),
+    });
 };
 
 export const saveContactAction = async (
@@ -106,7 +136,7 @@ export const saveContactAction = async (
       .where(eq(contacts.resumeId, resumeId as string));
     return;
   }
-  throw new Error("Invalid contact update");
+  throw new Error('Invalid contact update');
 };
 
 export async function aiEnhanceResumeAction(
@@ -115,7 +145,7 @@ export async function aiEnhanceResumeAction(
 ) {
   const user = await getUser();
   if (!user) {
-    redirect("/login");
+    redirect('/login');
   }
 
   return enhanceResume(content, section);

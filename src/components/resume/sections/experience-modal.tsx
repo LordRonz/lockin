@@ -23,19 +23,21 @@ import {
   experiencesAtom,
   experienceModalOpenAtom,
   experienceSchema,
+  resumeAtom,
 } from "@/lib/store/resume";
 import InputWithLabel from "@/components/ui/input-with-label";
 import { Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useCallback, useState, useTransition } from "react";
+import { useCallback, useEffect, useState, useTransition } from "react";
 import { ResumeSectionType } from "@/type/resume";
-import { aiEnhanceResumeAction } from "@/actions/resume";
+import { aiEnhanceResumeAction, saveExperienceAction } from "@/actions/resume";
 import { AiEnhance } from "@/components/form/ai-enhance";
+import { mapExperienceToDB } from "@/actions/resume/helper";
 
 export function ExperienceModal() {
   const [isOpen, setOpen] = useAtom(experienceModalOpenAtom);
   const [experiences, setExperiences] = useAtom(experiencesAtom);
-
+  const [resume] = useAtom(resumeAtom);
   const [experienceSummary, setExperienceSummary] = useState<{
     [key: string]: string;
   }>({});
@@ -63,6 +65,10 @@ export function ExperienceModal() {
     },
   });
 
+  useEffect(() => {
+    form.reset({ experiences });
+  }, [experiences, form]);
+
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "experiences",
@@ -71,8 +77,17 @@ export function ExperienceModal() {
   function onSubmit(values: {
     experiences: z.infer<typeof experienceSchema>[];
   }) {
+    if (!resume?.id) return;
+    const resumeId = resume.id;
     setExperiences(values.experiences);
-    setOpen(false);
+    startTransition(async () => {
+      await saveExperienceAction(values.experiences.map((experience) => ({
+        ...mapExperienceToDB(experience),
+        id: experience.id,
+        resumeId,
+      })));
+      setOpen(false);
+    });
   }
 
   const enhanceExperienceDesc = useCallback(
