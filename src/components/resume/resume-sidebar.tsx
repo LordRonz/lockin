@@ -1,21 +1,25 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useResumeContext } from "@/context/resume-context";
 import ResumeCompletion from "./resume-completion";
+import { useAtomValue } from "jotai";
+import { resumeAtom } from "@/lib/store/resume";
+
+const actionItems = [
+  'Download',
+  'Share',
+  'Create Cover Letter',
+  'Apply Job Link',
+];
 
 export const ResumeSidebar = () => {
-  const actionItems = [
-    "Download",
-    "Share",
-    "Create Cover Letter",
-    "Apply Job Link",
-  ];
-  
   const { downloadPdf } = useResumeContext();
+
+  const resume = useAtomValue(resumeAtom);
 
   const handleActionClick = (action: string) => {
     console.log(`${action} clicked`);
@@ -66,7 +70,7 @@ export const ResumeSidebar = () => {
 
       {/* Footer Section */}
       <div className="text-xs text-center text-gray-500">
-        Last Edited Sat 1 Feb 15.06
+        Last Edited {resume?.updatedAt?.toString()}
       </div>
     </div>
   );

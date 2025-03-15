@@ -15,6 +15,7 @@ import { enhanceResume } from '@/lib/openai/enhance-resume';
 import { buildConflictUpdateColumns } from '@/lib/db';
 import { ResumeSectionType } from '@/type/resume';
 import { redirect } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
 
 type submitResumeProps = {
   title: string;
@@ -55,13 +56,23 @@ export const createResumeAction = async () => {
   return db.insert(resumes).values({ userId: user.user.id }).returning();
 };
 
+export const updateResumeUpdated = async (resumeId: string) => {
+  await db
+    .update(resumes)
+    .set({ updatedAt: new Date() })
+    .where(eq(resumes.id, resumeId));
+  revalidatePath(`/resume/${resumeId}`);
+};
+
 export const saveSummaryAction = async (data: typeof summary.$inferInsert) => {
   const { id: _, ...dataWithoutId } = data;
 
-  return db.insert(summary).values(data).onConflictDoUpdate({
+  await db.insert(summary).values(data).onConflictDoUpdate({
     target: summary.resumeId,
     set: dataWithoutId,
   });
+
+  return updateResumeUpdated(data.resumeId);
 };
 
 export const saveExperienceAction = async (
@@ -83,6 +94,7 @@ export const saveExperienceAction = async (
         'position',
       ]),
     });
+  return updateResumeUpdated(data[0].resumeId);
 };
 
 export const saveEducationAction = async (
@@ -104,6 +116,8 @@ export const saveEducationAction = async (
         'school',
       ]),
     });
+
+  return updateResumeUpdated(data[0].resumeId);
 };
 
 export const saveSkillAction = async (data: (typeof skills.$inferInsert)[]) => {
@@ -114,6 +128,8 @@ export const saveSkillAction = async (data: (typeof skills.$inferInsert)[]) => {
       target: skills.id,
       set: buildConflictUpdateColumns(skills, ['resumeId', 'name', 'level']),
     });
+
+  return updateResumeUpdated(data[0].resumeId);
 };
 
 export const saveContactAction = async (
@@ -134,7 +150,8 @@ export const saveContactAction = async (
       .update(contacts)
       .set(data)
       .where(eq(contacts.resumeId, resumeId as string));
-    return;
+
+    return updateResumeUpdated(data.resumeId);
   }
   throw new Error('Invalid contact update');
 };
