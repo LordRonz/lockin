@@ -14,7 +14,6 @@ const actionItems = [
   'Download',
   'Share',
   'Create Cover Letter',
-  'Apply Job Link',
 ];
 
 export const ResumeSidebar = () => {
@@ -23,7 +22,6 @@ export const ResumeSidebar = () => {
   const resume = useAtomValue(resumeAtom);
 
   const handleActionClick = (action: string) => {
-    console.log(`${action} clicked`);
     if (action === 'Download') {
       downloadPdf();
     }

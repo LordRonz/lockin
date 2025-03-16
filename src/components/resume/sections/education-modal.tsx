@@ -3,7 +3,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useFieldArray, useForm } from 'react-hook-form';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import * as z from 'zod';
 import {
   Dialog,
@@ -25,18 +25,16 @@ import {
   educationSchema,
   resumeAtom,
 } from '@/lib/store/resume';
-import { Loader2, Plus, Trash } from 'lucide-react';
+import { Loader2, Plus } from 'lucide-react';
 import InputWithLabel from '@/components/ui/input-with-label';
-import { Separator } from '@/components/ui/separator';
 import { saveEducationAction } from '@/actions/resume';
 import { useEffect, useTransition } from 'react';
 import { mapEducationToDB } from '@/actions/resume/helper';
-import { cn } from '@/lib/utils';
 
 export function EducationModal() {
   const [isOpen, setOpen] = useAtom(educationModalOpenAtom);
   const [educations, setEducations] = useAtom(educationsAtom);
-  const [resume] = useAtom(resumeAtom);
+  const resume = useAtomValue(resumeAtom);
   const [isPending, startTransition] = useTransition();
   const form = useForm<{ educations: z.infer<typeof educationSchema>[] }>({
     resolver: zodResolver(
@@ -85,14 +83,18 @@ export function EducationModal() {
     });
   }
 
-  if (isPending) return <Loader2 className={cn('animate-spin', !isPending && 'hidden')} />;
-
   return (
     <Dialog open={isOpen} onOpenChange={setOpen}>
       <DialogContent className="max-w-[80vw] max-h-[90vh] overflow-scroll">
         <DialogHeader>
-          <DialogTitle className="text-gray-900">Education Details</DialogTitle>
+          <DialogTitle className="text-gray-900">Education</DialogTitle>
         </DialogHeader>
+
+        {isPending && (
+          <div className="absolute inset-0 flex items-center justify-center bg-white/80 z-10">
+            <Loader2 className="animate-spin" />
+          </div>
+        )}
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -189,18 +191,14 @@ export function EducationModal() {
                   {fields.length > 1 && (
                     <Button
                       type="button"
-                      variant="destructive"
-                      className="absolute top-2 right-2"
+                      variant="ghost"
+                      className="w-full text-red-400 font-semibold hover:text-red-500 border-1 border-gray-300 rounded-2xl"
                       onClick={() => remove(index)}
                     >
-                      <Trash size={16} />
+                      Delete
                     </Button>
                   )}
                 </div>
-
-                {index < fields.length - 1 && (
-                  <Separator className="bg-orange-400 h-1 rounded-2xl" />
-                )}
               </div>
             ))}
 
@@ -235,7 +233,8 @@ export function EducationModal() {
               </Button>
               <Button
                 type="submit"
-                className="bg-orange-400 hover:bg-orange-500 text-white"
+                className="bg-orange-400 cursor-pointer hover:bg-orange-500 text-white"
+                disabled={isPending}
               >
                 Save
               </Button>
