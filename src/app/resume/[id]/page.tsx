@@ -1,4 +1,5 @@
 import { getResumeData } from '@/actions/resume';
+import BackToResume from '@/components/button/back-to-resume';
 import { ResumeEditor } from '@/components/resume/resume-editor';
 import { ResumeHeader } from '@/components/resume/resume-header';
 import ResumeHydrator from '@/components/resume/resume-hydrator';
@@ -17,6 +18,7 @@ export default async function ResumePage({
       <div className="container mx-auto max-w-6xl">
         <ResumeHydrator data={resume} />
         <ResumeHeader />
+        <BackToResume className='my-6' />
         <ResumeJobInput />
         <div className="flex">
           <main className="flex-1 overflow-auto">
