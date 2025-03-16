@@ -1,13 +1,14 @@
-"use client";
+'use client';
 
-import React, { useEffect } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { useResumeContext } from "@/context/resume-context";
-import ResumeCompletion from "./resume-completion";
-import { useAtomValue } from "jotai";
-import { resumeAtom } from "@/lib/store/resume";
+import React from 'react';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { useResumeContext } from '@/context/resume-context';
+import ResumeCompletion from './resume-completion';
+import { useAtomValue } from 'jotai';
+import { resumeAtom } from '@/lib/store/resume';
+import { formatCustomDate } from '@/lib/date';
 
 const actionItems = [
   'Download',
@@ -23,7 +24,7 @@ export const ResumeSidebar = () => {
 
   const handleActionClick = (action: string) => {
     console.log(`${action} clicked`);
-    if (action === "Download") {
+    if (action === 'Download') {
       downloadPdf();
     }
   };
@@ -47,7 +48,7 @@ export const ResumeSidebar = () => {
           </Button>
         ))}
       </Card> */}
-      
+
       <ResumeCompletion />
 
       {/* Action Section */}
@@ -57,9 +58,9 @@ export const ResumeSidebar = () => {
             key={action}
             variant="ghost"
             className={cn(
-              "w-full justify-start text-left text-sm font-semibold hover:bg-orange-400 hover:text-white",
-              index === actionItems.length - 1 && "rounded-b-3xl",
-              index === 0 && "rounded-t-3xl",
+              'w-full justify-start text-left text-sm font-semibold hover:bg-orange-400 hover:text-white',
+              index === actionItems.length - 1 && 'rounded-b-3xl',
+              index === 0 && 'rounded-t-3xl',
             )}
             onClick={() => handleActionClick(action)}
           >
@@ -70,7 +71,7 @@ export const ResumeSidebar = () => {
 
       {/* Footer Section */}
       <div className="text-xs text-center text-gray-500">
-        Last Edited {resume?.updatedAt?.toString()}
+        Last Edited {formatCustomDate(resume?.updatedAt)}
       </div>
     </div>
   );
