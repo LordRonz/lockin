@@ -64,6 +64,11 @@ export const updateResumeUpdated = async (resumeId: string) => {
   revalidatePath(`/resume/${resumeId}`);
 };
 
+export const updateResumeTitle = async (resumeId: string, title: string) => {
+  await db.update(resumes).set({ title }).where(eq(resumes.id, resumeId));
+  revalidatePath(`/resume/${resumeId}`);
+};
+
 export const saveSummaryAction = async (data: typeof summary.$inferInsert) => {
   const { id: _, ...dataWithoutId } = data;
 
