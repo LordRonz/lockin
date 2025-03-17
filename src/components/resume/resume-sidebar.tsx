@@ -9,12 +9,9 @@ import ResumeCompletion from './resume-completion';
 import { useAtomValue } from 'jotai';
 import { resumeAtom } from '@/lib/store/resume';
 import { formatCustomDate } from '@/lib/date';
+import { Divider } from '../ui/divider';
 
-const actionItems = [
-  'Download',
-  'Share',
-  'Create Cover Letter',
-];
+const actionItems = ['Download', 'Share', 'Create Cover Letter'];
 
 export const ResumeSidebar = () => {
   const { downloadPdf } = useResumeContext();
@@ -29,36 +26,18 @@ export const ResumeSidebar = () => {
 
   return (
     <div className="flex flex-col gap-4 p-4 max-w-xs h-full justify-center items-center">
-      {/* Menu Section */}
-      {/* <Card className="p-4 space-y-2 rounded-4xl">
-        {menuItems.map((item, index) => (
-          <Button
-            key={item}
-            variant="ghost"
-            className={cn(
-              "w-full justify-start text-left text-sm font-semibold hover:bg-orange-400 hover:text-white",
-              index === menuItems.length - 1 && "rounded-b-3xl",
-              index === 0 && "rounded-t-3xl",
-            )}
-            onClick={() => handleMenuClick(item)}
-          >
-            {item}
-          </Button>
-        ))}
-      </Card> */}
+      <Card className="p-4 space-y-2 rounded-4xl w-full">
+        <ResumeCompletion />
 
-      <ResumeCompletion />
+        <Divider />
 
-      {/* Action Section */}
-      <Card className="p-4 space-y-2 rounded-4xl">
-        {actionItems.map((action, index) => (
+        {/* Action Section */}
+        {actionItems.map((action) => (
           <Button
             key={action}
             variant="ghost"
             className={cn(
-              'w-full justify-start text-left text-sm font-semibold hover:bg-orange-400 hover:text-white',
-              index === actionItems.length - 1 && 'rounded-b-3xl',
-              index === 0 && 'rounded-t-3xl',
+              'w-full justify-start text-left text-md px-4 py-6 rounded-2xl font-medium hover:bg-white-orange hover:text-orange-a',
             )}
             onClick={() => handleActionClick(action)}
           >
