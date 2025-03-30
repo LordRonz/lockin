@@ -66,7 +66,9 @@ export async function getLinkedInJobData(
  * Alternative approach: Use LinkedIn's public API to get job data
  * This requires a job ID which can be extracted from the URL
  */
-export async function getLinkedInJobDataFromAPI(jobId: string): Promise<any> {
+export async function getLinkedInJobDataFromAPI(
+  jobId: string,
+): Promise<LinkedInJobData | null> {
   try {
     // LinkedIn's public API endpoint for job details
     const apiUrl = `https://www.linkedin.com/jobs-guest/jobs/api/jobPosting/${jobId}`;
@@ -81,12 +83,19 @@ export async function getLinkedInJobDataFromAPI(jobId: string): Promise<any> {
     // The response is HTML, so we need to parse it
     const $ = cheerio.load(response.data);
 
+    const requirements: string[] = [];
+    $('.description__text li').each((_, element) => {
+      const text = $(element).text().trim();
+      if (text) requirements.push(text);
+    });
+
     return {
       title: $('.top-card-layout__title').text().trim(),
       company: $('.topcard__org-name-link').text().trim(),
       location: $('.topcard__flavor--bullet').text().trim(),
       description: $('.description__text').text().trim(),
       jobUrl: `https://www.linkedin.com/jobs/view/${jobId}/`,
+      requirements,
     };
   } catch (error) {
     console.error('Error fetching LinkedIn job data from API:', error);
