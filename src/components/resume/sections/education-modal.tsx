@@ -30,11 +30,13 @@ import InputWithLabel from '@/components/ui/input-with-label';
 import { saveEducationAction } from '@/actions/resume';
 import { useEffect, useTransition } from 'react';
 import { mapEducationToDB } from '@/actions/resume/helper';
+import { isLocalStorageAtom } from '@/lib/store/isLocalStorage';
 
 export function EducationModal() {
   const [isOpen, setOpen] = useAtom(educationModalOpenAtom);
   const [educations, setEducations] = useAtom(educationsAtom);
   const resume = useAtomValue(resumeAtom);
+  const [isLocalStorage] = useAtom(isLocalStorageAtom);
   const [isPending, startTransition] = useTransition();
   const form = useForm<{ educations: z.infer<typeof educationSchema>[] }>({
     resolver: zodResolver(
@@ -72,13 +74,17 @@ export function EducationModal() {
     const resumeId = resume.id;
     setEducations(values.educations);
     startTransition(async () => {
-      await saveEducationAction(
-        values.educations.map((education) => ({
-          ...mapEducationToDB(education),
-          id: education.id,
-          resumeId,
-        })),
-      );
+      if (isLocalStorage) {
+        saveEducationsToLocalStorage(values.educations, resumeId);
+      } else {
+        await saveEducationAction(
+          values.educations.map((education) => ({
+            ...mapEducationToDB(education),
+            id: education.id,
+            resumeId,
+          })),
+        );
+      }
       setOpen(false);
     });
   }
@@ -244,4 +250,16 @@ export function EducationModal() {
       </DialogContent>
     </Dialog>
   );
+}
+
+function saveEducationsToLocalStorage(educations: any[], resumeId: string) {
+  const allEducations = JSON.parse(localStorage.getItem('educations') || '[]');
+  // Filter out old educations for this resumeId
+  const otherEducations = allEducations.filter(
+    (edu: any) => edu.resumeId !== resumeId,
+  );
+  // Add the new educations, ensuring each has the resumeId
+  const newEducations = educations.map((edu) => ({ ...edu, resumeId }));
+  const updatedEducations = [...otherEducations, ...newEducations];
+  localStorage.setItem('educations', JSON.stringify(updatedEducations));
 }

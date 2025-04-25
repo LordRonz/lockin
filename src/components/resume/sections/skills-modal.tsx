@@ -26,11 +26,13 @@ import { Loader2, XIcon } from 'lucide-react';
 import { useEffect, useTransition } from 'react';
 import { saveSkillAction } from '@/actions/resume';
 import { cn } from '@/lib/utils';
+import { isLocalStorageAtom } from '@/lib/store/isLocalStorage';
 
 export function SkillsModal() {
   const [isOpen, setOpen] = useAtom(skillsModalOpenAtom);
   const [skills, setSkills] = useAtom(skillsAtom);
   const [resume] = useAtom(resumeAtom);
+  const [isLocalStorage] = useAtom(isLocalStorageAtom);
 
   const [isPending, startTransition] = useTransition();
 
@@ -73,12 +75,16 @@ export function SkillsModal() {
       const validatedSkills = skillsSchema.parse(skills);
       setSkills(validatedSkills);
       startTransition(async () => {
-        await saveSkillAction(
-          validatedSkills.map((skill) => ({
-            name: skill,
-            resumeId: resumeId,
-          })),
-        );
+        if (isLocalStorage) {
+          saveSkillsToLocalStorage(validatedSkills, resumeId);
+        } else {
+          await saveSkillAction(
+            validatedSkills.map((skill) => ({
+              name: skill,
+              resumeId: resumeId,
+            })),
+          );
+        }
         setOpen(false);
       });
     } catch (error) {
@@ -167,4 +173,16 @@ export function SkillsModal() {
       </DialogContent>
     </Dialog>
   );
+}
+
+function saveSkillsToLocalStorage(skills: string[], resumeId: string) {
+  const allSkills = JSON.parse(localStorage.getItem('skills') || '[]');
+  // Filter out old skills for this resumeId
+  const otherSkills = allSkills.filter(
+    (skill: any) => skill.resumeId !== resumeId,
+  );
+  // Add the new skills, ensuring each has the resumeId and name
+  const newSkills = skills.map((skillName) => ({ name: skillName, resumeId }));
+  const updatedSkills = [...otherSkills, ...newSkills];
+  localStorage.setItem('skills', JSON.stringify(updatedSkills));
 }

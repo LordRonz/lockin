@@ -29,6 +29,7 @@ import { aiEnhanceResumeAction, saveSummaryAction } from '@/actions/resume';
 import { ResumeSectionType } from '@/type/resume';
 import { useCallback, useEffect, useState, useTransition } from 'react';
 import { AiEnhance } from '@/components/form/ai-enhance';
+import { isLocalStorageAtom } from '@/lib/store/isLocalStorage';
 
 export function SummaryModal() {
   const [isOpen, setOpen] = useAtom(summaryModalOpenAtom);
@@ -38,6 +39,7 @@ export function SummaryModal() {
   const [resume] = useAtom(resumeAtom);
 
   const [aiSummary, setAiSummary] = useState<string>();
+  const [isLocalStorage] = useAtom(isLocalStorageAtom);
 
   const [isPending, startTransition] = useTransition();
 
@@ -55,7 +57,11 @@ export function SummaryModal() {
     const resumeId = resume.id;
     setSummary(values);
     startTransition(async () => {
-      await saveSummaryAction({ ...values, resumeId });
+      if (isLocalStorage) {
+        saveSummaryToLocalStorage({ ...values, resumeId: resumeId ?? '' });
+      } else {
+        await saveSummaryAction({ ...values, resumeId });
+      }
       setOpen(false);
     });
   }
@@ -151,4 +157,16 @@ export function SummaryModal() {
       </DialogContent>
     </Dialog>
   );
+}
+
+
+function saveSummaryToLocalStorage(summary: any) {
+  const summaries = JSON.parse(localStorage.getItem('summary') || '[]');
+  const idx = summaries.findIndex((s: any) => s.resumeId === summary.resumeId);
+  if (idx !== -1) {
+    summaries[idx] = { ...summaries[idx], ...summary };
+  } else {
+    summaries.push(summary);
+  }
+  localStorage.setItem('summary', JSON.stringify(summaries));
 }

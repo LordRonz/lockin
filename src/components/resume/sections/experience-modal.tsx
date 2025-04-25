@@ -1,38 +1,39 @@
-"use client";
+'use client';
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useFieldArray, useForm } from "react-hook-form";
-import { useAtom } from "jotai";
-import * as z from "zod";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useFieldArray, useForm } from 'react-hook-form';
+import { useAtom } from 'jotai';
+import * as z from 'zod';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from "@/components/ui/form";
+} from '@/components/ui/form';
 import {
   experiencesAtom,
   experienceModalOpenAtom,
   experienceSchema,
   resumeAtom,
-} from "@/lib/store/resume";
-import InputWithLabel from "@/components/ui/input-with-label";
-import { Plus } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { useCallback, useEffect, useState, useTransition } from "react";
-import { ResumeSectionType } from "@/type/resume";
-import { aiEnhanceResumeAction, saveExperienceAction } from "@/actions/resume";
-import { AiEnhance } from "@/components/form/ai-enhance";
-import { mapExperienceToDB } from "@/actions/resume/helper";
+} from '@/lib/store/resume';
+import InputWithLabel from '@/components/ui/input-with-label';
+import { Plus } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { useCallback, useEffect, useState, useTransition } from 'react';
+import { ResumeSectionType } from '@/type/resume';
+import { aiEnhanceResumeAction, saveExperienceAction } from '@/actions/resume';
+import { AiEnhance } from '@/components/form/ai-enhance';
+import { mapExperienceToDB } from '@/actions/resume/helper';
+import { isLocalStorageAtom } from '@/lib/store/isLocalStorage';
 
 export function ExperienceModal() {
   const [isOpen, setOpen] = useAtom(experienceModalOpenAtom);
@@ -41,6 +42,7 @@ export function ExperienceModal() {
   const [experienceSummary, setExperienceSummary] = useState<{
     [key: string]: string;
   }>({});
+  const [isLocalStorage] = useAtom(isLocalStorageAtom);
 
   const [isPending, startTransition] = useTransition();
 
@@ -55,11 +57,11 @@ export function ExperienceModal() {
         ? experiences
         : [
             {
-              company: "",
-              position: "",
-              location: "",
-              dates: "",
-              description: "",
+              company: '',
+              position: '',
+              location: '',
+              dates: '',
+              description: '',
             },
           ],
     },
@@ -71,7 +73,7 @@ export function ExperienceModal() {
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: "experiences",
+    name: 'experiences',
   });
 
   function onSubmit(values: {
@@ -81,11 +83,17 @@ export function ExperienceModal() {
     const resumeId = resume.id;
     setExperiences(values.experiences);
     startTransition(async () => {
-      await saveExperienceAction(values.experiences.map((experience) => ({
-        ...mapExperienceToDB(experience),
-        id: experience.id,
-        resumeId,
-      })));
+      if (isLocalStorage) {
+        saveExperiencesToLocalStorage(values.experiences, resumeId);
+      } else {
+        await saveExperienceAction(
+          values.experiences.map((experience) => ({
+            ...mapExperienceToDB(experience),
+            id: experience.id,
+            resumeId,
+          })),
+        );
+      }
       setOpen(false);
     });
   }
@@ -128,8 +136,8 @@ export function ExperienceModal() {
               <div key={field.id}>
                 <div
                   className={cn(
-                    "relative rounded-lg space-y-4",
-                    fields.length > 1 && "pt-12",
+                    'relative rounded-lg space-y-4',
+                    fields.length > 1 && 'pt-12',
                   )}
                 >
                   <div className="grid grid-cols-2 gap-6">
@@ -266,11 +274,11 @@ export function ExperienceModal() {
                 className="w-full flex items-center justify-center gap-2 border-orange-a rounded-2xl mt-2"
                 onClick={() =>
                   append({
-                    company: "",
-                    position: "",
-                    location: "",
-                    dates: "",
-                    description: "",
+                    company: '',
+                    position: '',
+                    location: '',
+                    dates: '',
+                    description: '',
                   })
                 }
               >
@@ -298,4 +306,18 @@ export function ExperienceModal() {
       </DialogContent>
     </Dialog>
   );
+}
+
+function saveExperiencesToLocalStorage(experiences: any[], resumeId: string) {
+  const allExperiences = JSON.parse(
+    localStorage.getItem('experiences') || '[]',
+  );
+  // Filter out old experiences for this resumeId
+  const otherExperiences = allExperiences.filter(
+    (exp: any) => exp.resumeId !== resumeId,
+  );
+  // Add the new experiences, ensuring each has the resumeId
+  const newExperiences = experiences.map((exp) => ({ ...exp, resumeId }));
+  const updatedExperiences = [...otherExperiences, ...newExperiences];
+  localStorage.setItem('experiences', JSON.stringify(updatedExperiences));
 }

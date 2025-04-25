@@ -8,6 +8,7 @@ export const contactSchema = z.object({
   email: z.string().email("Invalid email address"),
   phone: z.string().optional(),
   location: z.string().optional(),
+  website: z.string().optional(),
 })
 
 export type ContactData = z.infer<typeof contactSchema>
@@ -18,6 +19,7 @@ export const initialContactData: ContactData = {
   email: "example@example.com",
   phone: "+1 6969696969",
   location: "Ohio",
+  website: "example.com",
 }
 
 // Jotai atoms

@@ -1,5 +1,5 @@
 // components/ResumeHydrator.tsx
-"use client";
+'use client';
 
 import {
   experiencesAtom,
@@ -13,12 +13,12 @@ import {
   initialEducations,
   initialSkills,
   initialSummary,
-} from "@/lib/store/resume";
+} from '@/lib/store/resume';
 import {
   ContactData,
   contactDataAtom,
   initialContactData,
-} from "@/lib/store/contact";
+} from '@/lib/store/contact';
 import {
   contacts,
   educations,
@@ -26,9 +26,10 @@ import {
   resumes,
   skills,
   summary,
-} from "@/db/schema";
-import { useSetAtom } from "jotai";
-import { useEffect } from "react";
+} from '@/db/schema';
+import { useSetAtom } from 'jotai';
+import { useEffect } from 'react';
+import { isLocalStorageAtom } from '@/lib/store/isLocalStorage';
 
 export type ResumeData = typeof resumes.$inferSelect & {
   experiences: (typeof experiences.$inferSelect)[];
@@ -38,15 +39,68 @@ export type ResumeData = typeof resumes.$inferSelect & {
   contact: typeof contacts.$inferSelect;
 };
 
-export default function ResumeHydrator({ data }: { data?: ResumeData }) {
+export default function ResumeHydrator({
+  data,
+  useLocalStorage,
+}: {
+  data?: ResumeData;
+  useLocalStorage?: boolean;
+}) {
   const setResume = useSetAtom(resumeAtom);
   const setContact = useSetAtom(contactDataAtom);
   const setExperiences = useSetAtom(experiencesAtom);
   const setEducations = useSetAtom(educationsAtom);
   const setSkills = useSetAtom(skillsAtom);
   const setSummary = useSetAtom(summaryAtom);
+  const setIsLocalStorage = useSetAtom(isLocalStorageAtom);
 
   useEffect(() => {
+    if (useLocalStorage && data?.id) {
+      const resumesArr = JSON.parse(localStorage.getItem('resumes') || '[]');
+      const contactsArr = JSON.parse(localStorage.getItem('contacts') || '[]');
+      const experiencesArr = JSON.parse(
+        localStorage.getItem('experiences') || '[]',
+      );
+      const educationsArr = JSON.parse(
+        localStorage.getItem('educations') || '[]',
+      );
+      const skillsArr = JSON.parse(localStorage.getItem('skills') || '[]');
+      const summaryArr = JSON.parse(localStorage.getItem('summary') || '[]');
+
+      const resume = resumesArr.find((r: any) => r.id === data.id);
+      resume.updatedAt = new Date(resume.updatedAt);
+      resume.createdAt = new Date(resume.createdAt);
+      const contact = contactsArr.find((c: any) => c.resumeId === data.id);
+      const experiences = experiencesArr.filter(
+        (e: any) => e.resumeId === data.id,
+      );
+      const educations = educationsArr.filter(
+        (e: any) => e.resumeId === data.id,
+      );
+      const skills = skillsArr.filter((s: any) => s.resumeId === data.id);
+      const summary = summaryArr.find((s: any) => s.resumeId === data.id);
+
+      setResume(resume ?? initialExperiences);
+      setContact(contact ?? initialContactData);
+      setExperiences(
+        experiences.length > 0
+          ? experiences.map(mapExperienceFromDB)
+          : initialExperiences,
+      );
+      setEducations(
+        educations.length > 0
+          ? educations.map(mapEducationFromDB)
+          : initialEducations,
+      );
+      setSkills(
+        skills.length > 0 ? skills.map(mapSkillsFromDB) : initialSkills,
+      );
+      setSummary(summary ?? initialSummary);
+
+      setIsLocalStorage(true);
+      return;
+    }
+
     if (!data) return;
 
     setResume(data);
@@ -66,6 +120,7 @@ export default function ResumeHydrator({ data }: { data?: ResumeData }) {
     setEducations,
     setSkills,
     setSummary,
+    useLocalStorage,
   ]);
 
   return null;
@@ -76,11 +131,11 @@ const mapExperienceFromDB = (
   exp: typeof experiences.$inferSelect,
 ): Experience => ({
   id: exp.id,
-  company: exp.companyName || "",
-  position: exp.position || "",
-  location: exp.location || "",
-  dates: `${exp.startDate} - ${exp.current ? "Present" : exp.endDate}`,
-  description: exp.description || "",
+  company: exp.companyName || '',
+  position: exp.position || '',
+  location: exp.location || '',
+  dates: `${exp.startDate} - ${exp.current ? 'Present' : exp.endDate}`,
+  description: exp.description || '',
 });
 
 const mapEducationFromDB = (
@@ -88,11 +143,11 @@ const mapEducationFromDB = (
 ): Education => ({
   id: edu.id,
   dates: `${edu.startDate} - ${edu.endDate}`,
-  institution: edu.school || "",
-  field: edu.fieldOfStudy || "",
-  location: edu.location || "",
-  degree: edu.degree || "",
-  level: edu.location || "",
+  institution: edu.school || '',
+  field: edu.fieldOfStudy || '',
+  location: edu.location || '',
+  degree: edu.degree || '',
+  level: edu.location || '',
 });
 
 const mapContactFromDB = (
@@ -101,10 +156,10 @@ const mapContactFromDB = (
   contact
     ? {
         id: contact.id,
-        fullName: contact.fullName || "",
-        email: contact.email || "",
-        phone: contact.phone || "",
-        location: contact.location || "",
+        fullName: contact.fullName || '',
+        email: contact.email || '',
+        phone: contact.phone || '',
+        location: contact.location || '',
       }
     : contact;
 

@@ -104,12 +104,6 @@ export const useAllAtomPopulated = () => {
   const summary = useAtomValue(summaryAtom);
   const contact = useAtomValue(contactDataAtom);
 
-  console.log('experiences', experiences);
-  console.log('educations', educations);
-  console.log('skills', skills);
-  console.log('summary', summary);
-  console.log('contact', contact);
-
   return !!(
     experiences.length > 0 &&
     experiences.every(

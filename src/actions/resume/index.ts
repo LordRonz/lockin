@@ -24,6 +24,10 @@ type submitResumeProps = {
 export async function submitResumeAction(data: submitResumeProps) {
   const user = await getUser();
 
+  if (!user) {
+    redirect('/login');
+  }
+
   await db.insert(resumes).values({ userId: user.user.id, ...data });
 
   return {
@@ -46,6 +50,9 @@ export async function getResumeData(resumeId: string) {
 
 export const getResumeListAction = async () => {
   const user = await getUser();
+  if (!user) {
+    return [];
+  }
   return db.query.resumes.findMany({
     where: (resumes) => eq(resumes.userId, user.user.id),
   });
@@ -53,6 +60,9 @@ export const getResumeListAction = async () => {
 
 export const createResumeAction = async () => {
   const user = await getUser();
+  if (!user) {
+    redirect('/login');
+  }
   return db.insert(resumes).values({ userId: user.user.id }).returning();
 };
 

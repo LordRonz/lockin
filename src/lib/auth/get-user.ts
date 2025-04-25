@@ -5,7 +5,7 @@ export async function getUser() {
   const user = await supabase.auth.getUser();
 
   if (!user.data.user?.id || user.error) {
-    throw new Error('User not found');
+    return null;
   }
   return user.data;
 }

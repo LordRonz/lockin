@@ -9,19 +9,35 @@ import { useState, useTransition } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { updateResumeTitle } from '@/actions/resume';
+import { isLocalStorageAtom } from '@/lib/store/isLocalStorage';
+
+function saveResumeTitleToLocalStorage(resumeId: string, newTitle: string) {
+  const resumes = JSON.parse(localStorage.getItem('resumes') || '[]');
+  const idx = resumes.findIndex((r: any) => r.id === resumeId);
+  if (idx !== -1) {
+    resumes[idx].title = newTitle;
+    localStorage.setItem('resumes', JSON.stringify(resumes));
+  }
+}
 
 export default function BackToResume(props: { className?: string }) {
   const [resume, setResume] = useAtom(resumeAtom);
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(resume?.title || '');
+  const [isLocalStorage] = useAtom(isLocalStorageAtom);
 
   const [isPending, startTransition] = useTransition();
 
   const handleSave = () => {
     if (resume?.id && editedTitle.trim() && !isPending) {
       startTransition(() => {
-        updateResumeTitle(resume.id ?? '', editedTitle.trim());
-        setResume({ ...resume, title: editedTitle.trim() });
+        const newTitle = editedTitle.trim();
+        if (isLocalStorage) {
+          saveResumeTitleToLocalStorage(resume.id ?? '', newTitle);
+        } else {
+          updateResumeTitle(resume.id ?? '', newTitle);
+        }
+        setResume({ ...resume, title: newTitle });
         setIsEditing(false);
       });
     }

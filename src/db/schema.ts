@@ -28,6 +28,7 @@ export const contacts = pgTable("contacts", {
   email: text("email").notNull(),
   phone: text("phone"),
   location: text("location"),
+  website: text("website"),
 });
 
 export const sections = pgTable("sections", {

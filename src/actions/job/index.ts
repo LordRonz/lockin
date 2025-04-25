@@ -4,6 +4,5 @@ import { getLinkedInJobData } from '@/lib/scraper';
 
 export const getLinkedInJobDataAction = async (url: string) => {
   const jobData = await getLinkedInJobData(url);
-  console.log(jobData);
   return jobData;
 };

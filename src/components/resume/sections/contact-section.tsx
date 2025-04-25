@@ -1,42 +1,44 @@
 // src/components/contact-modal.tsx
-"use client";
+'use client';
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useAtom } from "jotai";
-import * as z from "zod";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { useAtom } from 'jotai';
+import * as z from 'zod';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from "@/components/ui/form";
+} from '@/components/ui/form';
 import {
   contactDataAtom,
   contactModalOpenAtom,
   contactSchema,
-} from "@/lib/store/contact";
-import InputWithLabel from "@/components/ui/input-with-label";
-import { useTransition } from "react";
+} from '@/lib/store/contact';
+import InputWithLabel from '@/components/ui/input-with-label';
+import { useTransition } from 'react';
 import {
   createResumeAction,
   getResumeListAction,
   saveContactAction,
-} from "@/actions/resume";
-import { resumeAtom } from "@/lib/store/resume";
+} from '@/actions/resume';
+import { resumeAtom } from '@/lib/store/resume';
+import { isLocalStorageAtom } from '@/lib/store/isLocalStorage';
 
 export function ContactModal() {
   const [isOpen, setOpen] = useAtom(contactModalOpenAtom);
   const [contactData, setContactData] = useAtom(contactDataAtom);
   const [resumeData, setResumeData] = useAtom(resumeAtom);
+  const [isLocalStorage] = useAtom(isLocalStorageAtom);
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof contactSchema>>({
@@ -53,11 +55,15 @@ export function ContactModal() {
         setResumeData(resumes[0]);
         resumeId = resumes[0].id;
       }
-      await saveContactAction(
-        { ...values, resumeId: resumeId ?? "" },
-        contactData.id,
-        resumeId,
-      );
+      if (isLocalStorage) {
+        saveContactToLocalStorage({ ...values, resumeId: resumeId ?? '' });
+      } else {
+        await saveContactAction(
+          { ...values, resumeId: resumeId ?? '' },
+          contactData.id,
+          resumeId,
+        );
+      }
 
       setContactData(values);
       setOpen(false);
@@ -114,7 +120,7 @@ export function ContactModal() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormField
                 control={form.control}
-                name="email"
+                name="location"
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
@@ -154,7 +160,7 @@ export function ContactModal() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormField
                 control={form.control}
-                name="location"
+                name="website"
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
@@ -194,4 +200,15 @@ export function ContactModal() {
       </DialogContent>
     </Dialog>
   );
+}
+
+function saveContactToLocalStorage(contact: any) {
+  const contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
+  const idx = contacts.findIndex((c: any) => c.resumeId === contact.resumeId);
+  if (idx !== -1) {
+    contacts[idx] = { ...contacts[idx], ...contact };
+  } else {
+    contacts.push(contact);
+  }
+  localStorage.setItem('contacts', JSON.stringify(contacts));
 }
