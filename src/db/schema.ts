@@ -134,3 +134,9 @@ export const resumeRelations = relations(resumes, ({ many, one }) => ({
     relationName: "resume_summary",
   }),
 }));
+
+export type ExperienceData = typeof experiences.$inferSelect;
+export type EducationData = typeof educations.$inferSelect;
+export type SkillsData = typeof skills.$inferSelect;
+export type SummaryData = typeof summary.$inferSelect;
+export type ContactData = typeof contacts.$inferSelect;

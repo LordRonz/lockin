@@ -20,6 +20,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import {
+  Education,
   educationModalOpenAtom,
   educationsAtom,
   educationSchema,
@@ -31,6 +32,7 @@ import { saveEducationAction } from '@/actions/resume';
 import { useEffect, useTransition } from 'react';
 import { mapEducationToDB } from '@/actions/resume/helper';
 import { isLocalStorageAtom } from '@/lib/store/isLocalStorage';
+import { EducationData } from '@/db/schema';
 
 export function EducationModal() {
   const [isOpen, setOpen] = useAtom(educationModalOpenAtom);
@@ -252,11 +254,14 @@ export function EducationModal() {
   );
 }
 
-function saveEducationsToLocalStorage(educations: any[], resumeId: string) {
+function saveEducationsToLocalStorage(
+  educations: Education[],
+  resumeId: string,
+) {
   const allEducations = JSON.parse(localStorage.getItem('educations') || '[]');
   // Filter out old educations for this resumeId
   const otherEducations = allEducations.filter(
-    (edu: any) => edu.resumeId !== resumeId,
+    (edu: EducationData) => edu.resumeId !== resumeId,
   );
   // Add the new educations, ensuring each has the resumeId
   const newEducations = educations.map((edu) => ({ ...edu, resumeId }));

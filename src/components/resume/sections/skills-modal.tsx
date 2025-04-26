@@ -27,6 +27,7 @@ import { useEffect, useTransition } from 'react';
 import { saveSkillAction } from '@/actions/resume';
 import { cn } from '@/lib/utils';
 import { isLocalStorageAtom } from '@/lib/store/isLocalStorage';
+import { SkillsData } from '@/db/schema';
 
 export function SkillsModal() {
   const [isOpen, setOpen] = useAtom(skillsModalOpenAtom);
@@ -179,7 +180,7 @@ function saveSkillsToLocalStorage(skills: string[], resumeId: string) {
   const allSkills = JSON.parse(localStorage.getItem('skills') || '[]');
   // Filter out old skills for this resumeId
   const otherSkills = allSkills.filter(
-    (skill: any) => skill.resumeId !== resumeId,
+    (skill: SkillsData) => skill.resumeId !== resumeId,
   );
   // Add the new skills, ensuring each has the resumeId and name
   const newSkills = skills.map((skillName) => ({ name: skillName, resumeId }));

@@ -1,6 +1,6 @@
 'use client';
 
-import { resumeAtom } from '@/lib/store/resume';
+import { Resume, resumeAtom } from '@/lib/store/resume';
 import { cn } from '@/lib/utils';
 import { useAtom } from 'jotai';
 import { ArrowLeft, Check, Loader2, Pencil } from 'lucide-react';
@@ -13,7 +13,7 @@ import { isLocalStorageAtom } from '@/lib/store/isLocalStorage';
 
 function saveResumeTitleToLocalStorage(resumeId: string, newTitle: string) {
   const resumes = JSON.parse(localStorage.getItem('resumes') || '[]');
-  const idx = resumes.findIndex((r: any) => r.id === resumeId);
+  const idx = resumes.findIndex((r: Resume) => r.id === resumeId);
   if (idx !== -1) {
     resumes[idx].title = newTitle;
     localStorage.setItem('resumes', JSON.stringify(resumes));

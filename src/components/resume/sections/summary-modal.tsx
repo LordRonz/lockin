@@ -30,6 +30,7 @@ import { ResumeSectionType } from '@/type/resume';
 import { useCallback, useEffect, useState, useTransition } from 'react';
 import { AiEnhance } from '@/components/form/ai-enhance';
 import { isLocalStorageAtom } from '@/lib/store/isLocalStorage';
+import { SummaryData } from '@/db/schema';
 
 export function SummaryModal() {
   const [isOpen, setOpen] = useAtom(summaryModalOpenAtom);
@@ -58,7 +59,10 @@ export function SummaryModal() {
     setSummary(values);
     startTransition(async () => {
       if (isLocalStorage) {
-        saveSummaryToLocalStorage({ ...values, resumeId: resumeId ?? '' });
+        saveSummaryToLocalStorage({
+          ...values,
+          resumeId: resumeId ?? '',
+        } as SummaryData);
       } else {
         await saveSummaryAction({ ...values, resumeId });
       }
@@ -159,10 +163,11 @@ export function SummaryModal() {
   );
 }
 
-
-function saveSummaryToLocalStorage(summary: any) {
+function saveSummaryToLocalStorage(summary: SummaryData) {
   const summaries = JSON.parse(localStorage.getItem('summary') || '[]');
-  const idx = summaries.findIndex((s: any) => s.resumeId === summary.resumeId);
+  const idx = summaries.findIndex(
+    (s: SummaryData) => s.resumeId === summary.resumeId,
+  );
   if (idx !== -1) {
     summaries[idx] = { ...summaries[idx], ...summary };
   } else {

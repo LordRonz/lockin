@@ -13,6 +13,7 @@ import {
   initialEducations,
   initialSkills,
   initialSummary,
+  Resume,
 } from '@/lib/store/resume';
 import {
   ContactData,
@@ -38,6 +39,11 @@ export type ResumeData = typeof resumes.$inferSelect & {
   summary: typeof summary.$inferSelect;
   contact: typeof contacts.$inferSelect;
 };
+
+type ExperienceData = typeof experiences.$inferSelect;
+type EducationData = typeof educations.$inferSelect;
+type SkillsData = typeof skills.$inferSelect;
+type SummaryData = typeof summary.$inferSelect;
 
 export default function ResumeHydrator({
   data,
@@ -67,18 +73,24 @@ export default function ResumeHydrator({
       const skillsArr = JSON.parse(localStorage.getItem('skills') || '[]');
       const summaryArr = JSON.parse(localStorage.getItem('summary') || '[]');
 
-      const resume = resumesArr.find((r: any) => r.id === data.id);
+      const resume = resumesArr.find((r: Resume) => r.id === data.id);
       resume.updatedAt = new Date(resume.updatedAt);
       resume.createdAt = new Date(resume.createdAt);
-      const contact = contactsArr.find((c: any) => c.resumeId === data.id);
+      const contact = contactsArr.find(
+        (c: typeof contacts.$inferSelect) => c.resumeId === data.id,
+      );
       const experiences = experiencesArr.filter(
-        (e: any) => e.resumeId === data.id,
+        (e: ExperienceData) => e.resumeId === data.id,
       );
       const educations = educationsArr.filter(
-        (e: any) => e.resumeId === data.id,
+        (e: EducationData) => e.resumeId === data.id,
       );
-      const skills = skillsArr.filter((s: any) => s.resumeId === data.id);
-      const summary = summaryArr.find((s: any) => s.resumeId === data.id);
+      const skills = skillsArr.filter(
+        (s: SkillsData) => s.resumeId === data.id,
+      );
+      const summary = summaryArr.find(
+        (s: SummaryData) => s.resumeId === data.id,
+      );
 
       setResume(resume ?? initialExperiences);
       setContact(contact ?? initialContactData);
@@ -121,6 +133,7 @@ export default function ResumeHydrator({
     setSkills,
     setSummary,
     useLocalStorage,
+    setIsLocalStorage,
   ]);
 
   return null;

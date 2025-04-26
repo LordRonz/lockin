@@ -33,6 +33,7 @@ import {
 } from '@/actions/resume';
 import { resumeAtom } from '@/lib/store/resume';
 import { isLocalStorageAtom } from '@/lib/store/isLocalStorage';
+import { ContactData } from '@/db/schema';
 
 export function ContactModal() {
   const [isOpen, setOpen] = useAtom(contactModalOpenAtom);
@@ -56,7 +57,10 @@ export function ContactModal() {
         resumeId = resumes[0].id;
       }
       if (isLocalStorage) {
-        saveContactToLocalStorage({ ...values, resumeId: resumeId ?? '' });
+        saveContactToLocalStorage({
+          ...values,
+          resumeId: resumeId ?? '',
+        } as ContactData);
       } else {
         await saveContactAction(
           { ...values, resumeId: resumeId ?? '' },
@@ -202,9 +206,11 @@ export function ContactModal() {
   );
 }
 
-function saveContactToLocalStorage(contact: any) {
+function saveContactToLocalStorage(contact: ContactData) {
   const contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
-  const idx = contacts.findIndex((c: any) => c.resumeId === contact.resumeId);
+  const idx = contacts.findIndex(
+    (c: ContactData) => c.resumeId === contact.resumeId,
+  );
   if (idx !== -1) {
     contacts[idx] = { ...contacts[idx], ...contact };
   } else {

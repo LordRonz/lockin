@@ -24,6 +24,7 @@ import {
   experienceModalOpenAtom,
   experienceSchema,
   resumeAtom,
+  Experience,
 } from '@/lib/store/resume';
 import InputWithLabel from '@/components/ui/input-with-label';
 import { Plus } from 'lucide-react';
@@ -34,6 +35,7 @@ import { aiEnhanceResumeAction, saveExperienceAction } from '@/actions/resume';
 import { AiEnhance } from '@/components/form/ai-enhance';
 import { mapExperienceToDB } from '@/actions/resume/helper';
 import { isLocalStorageAtom } from '@/lib/store/isLocalStorage';
+import { ExperienceData } from '@/db/schema';
 
 export function ExperienceModal() {
   const [isOpen, setOpen] = useAtom(experienceModalOpenAtom);
@@ -308,13 +310,16 @@ export function ExperienceModal() {
   );
 }
 
-function saveExperiencesToLocalStorage(experiences: any[], resumeId: string) {
+function saveExperiencesToLocalStorage(
+  experiences: Experience[],
+  resumeId: string,
+) {
   const allExperiences = JSON.parse(
     localStorage.getItem('experiences') || '[]',
   );
   // Filter out old experiences for this resumeId
   const otherExperiences = allExperiences.filter(
-    (exp: any) => exp.resumeId !== resumeId,
+    (exp: ExperienceData) => exp.resumeId !== resumeId,
   );
   // Add the new experiences, ensuring each has the resumeId
   const newExperiences = experiences.map((exp) => ({ ...exp, resumeId }));
