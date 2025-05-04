@@ -35,6 +35,17 @@ export async function submitResumeAction(data: submitResumeProps) {
   };
 }
 
+export async function deleteResumeAction(resumeId: string) {
+  const user = await getUser();
+  if (!user) {
+    redirect('/login');
+  }
+  await db.delete(resumes).where(eq(resumes.id, resumeId));
+  return {
+    type: 'RESUME_DELETE',
+  };
+}
+
 export async function getResumeData(resumeId: string) {
   return db.query.resumes.findFirst({
     where: (resumes) => eq(resumes.id, resumeId),
