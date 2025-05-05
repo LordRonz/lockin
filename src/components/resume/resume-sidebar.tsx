@@ -24,6 +24,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'; // Added Accordion imports
 
 const actionItems = ['Download', 'Share', 'Create Cover Letter'];
 
@@ -108,10 +114,35 @@ export const ResumeSidebar = () => {
         </AlertDialog>
       </Card>
 
-      {/* Footer Section */}
-      <div className="text-xs text-center text-gray-500">
+      {/* New Accordion Section */}
+      <Card className="p-4 rounded-4xl w-full">
+        <Accordion
+          defaultValue="item-1"
+          type="single"
+          collapsible
+          className="w-full"
+        >
+          <AccordionItem value="item-1" className="border-b-0">
+            <AccordionTrigger className="py-2 hover:no-underline">
+              {' '}
+              {/* Adjusted padding and hover */}
+              Info
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="text-xs text-center text-gray-500 pt-2">
+                {' '}
+                {/* Added padding top */}
+                Last Edited {formatCustomDate(resume?.updatedAt)}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </Card>
+
+      {/* Footer Section - Removed original div */}
+      {/* <div className="text-xs text-center text-gray-500">
         Last Edited {formatCustomDate(resume?.updatedAt)}
-      </div>
+      </div> */}
     </div>
   );
 };
