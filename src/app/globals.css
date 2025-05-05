@@ -1,41 +1,62 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-    --color-background: var(--background);
-    --color-foreground: var(--foreground);
-    --orange-a: #F98F41;
-    --color-orange-a: var(--orange-a);
-    --white-orange: #FFF6EF;
-    --color-white-orange: var(--white-orange);
-    --white-a: #FEFEFE;
-    --color-white-a: var(--white-a);
-    --gray-a: #F8F7F3;
-    --color-gray-a: var(--gray-a);
-    --gray-b: #EEE7E1;
-    --color-gray-b: var(--gray-b);
-    --gray-c: #776D6D;
-    --color-gray-c: var(--gray-c);
-    --black-a: #191919;
-    --color-black-a: var(--black-a);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --orange-a: #f98f41;
+  --color-orange-a: var(--orange-a);
+  --white-orange: #fff6ef;
+  --color-white-orange: var(--white-orange);
+  --white-a: #fefefe;
+  --color-white-a: var(--white-a);
+  --gray-a: #f8f7f3;
+  --color-gray-a: var(--gray-a);
+  --gray-b: #eee7e1;
+  --color-gray-b: var(--gray-b);
+  --gray-c: #776d6d;
+  --color-gray-c: var(--gray-c);
+  --black-a: #191919;
+  --color-black-a: var(--black-a);
 
-    @keyframes radial-grow {
-        0% {
-            background-size: 0% 0%;
-            background-position: center;
-        }
-        100% {
-            background-size: 100% 100%;
-            background-position: center;
-        }
+  @keyframes radial-grow {
+    0% {
+      background-size: 0% 0%;
+      background-position: center;
     }
+    100% {
+      background-size: 100% 100%;
+      background-position: center;
+    }
+  }
 
-    --animate-radial-grow: radial-grow 0.5s ease-in-out forwards;
+  --animate-radial-grow: radial-grow 0.5s ease-in-out forwards;
 
-    --radius-lg: var(--radius);
-    --radius-md: calc(var(--radius) - 2px);
-    --radius-sm: calc(var(--radius) - 4px);
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-fade-in-out: fade-in-out 4s ease-in-out;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
 }
 
 /*
@@ -47,31 +68,31 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
-    *,
-    ::after,
-    ::before,
-    ::backdrop,
-    ::file-selector-button {
-        border-color: var(--color-gray-200, currentColor);
-    }
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
 }
 
 @utility text-balance {
-    text-wrap: balance;
+  text-wrap: balance;
 }
 
 @layer utilities {
-    body {
-        font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
-    }
+  body {
+    font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  }
 }
 
 @layer base {
-    :root {
-        --radius: 0.5rem;
-    }
+  :root {
+    --radius: 0.5rem;
+  }
 }
 
 @theme {
-    --font-primary: var(--font-geist-sans), "sans-serif";
+  --font-primary: var(--font-geist-sans), 'sans-serif';
 }
