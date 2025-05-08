@@ -7,6 +7,10 @@ import {
   resumeAtom,
   skillsAtom,
   summaryAtom,
+  initialExperiences,
+  initialEducations,
+  initialSkills,
+  initialSummary,
 } from '@/lib/store/resume';
 import { useAtomValue } from 'jotai';
 
@@ -20,12 +24,33 @@ export default function ResumeCompletion() {
   const educations = useAtomValue(educationsAtom);
 
   const completedSections = useMemo(() => {
+    // Title: not empty and not default
+    const isTitleComplete =
+      Boolean(resume?.title?.trim()) &&
+      resume?.title?.trim() !== 'Untitled Resume';
+
+    const isSummaryComplete =
+      summary.text.trim().length > 0 &&
+      summary.text.trim() !== initialSummary.text.trim();
+
+    const isExperienceComplete =
+      experiences.length > 0 &&
+      JSON.stringify(experiences) !== JSON.stringify(initialExperiences);
+
+    const isSkillsComplete =
+      skills.length > 0 &&
+      JSON.stringify(skills) !== JSON.stringify(initialSkills);
+
+    const isEducationComplete =
+      educations.length > 0 &&
+      JSON.stringify(educations) !== JSON.stringify(initialEducations);
+
     return {
-      Title: Boolean(resume?.title?.trim()),
-      Summary: Boolean(summary.text.trim()),
-      Experience: experiences.length > 0,
-      Skills: skills.length > 0,
-      Education: educations.length > 0,
+      Title: isTitleComplete,
+      Summary: isSummaryComplete,
+      Experience: isExperienceComplete,
+      Skills: isSkillsComplete,
+      Education: isEducationComplete,
     };
   }, [resume, summary, experiences, skills, educations]);
 
@@ -43,13 +68,24 @@ export default function ResumeCompletion() {
             {section}
           </span>
 
-          <CheckIcon
-            className={cn(
-              'text-orange-a',
-              !completedSections[section as keyof typeof completedSections] &&
-                'hidden',
-            )}
-          />
+          <div className="flex items-center justify-center w-6">
+            <CheckIcon
+              className={cn(
+                'text-orange-a',
+                !completedSections[section as keyof typeof completedSections] &&
+                  'hidden',
+              )}
+            />
+            <span
+              className={cn(
+                'text-red-600 text-3xl font-semibold leading-0',
+                completedSections[section as keyof typeof completedSections] &&
+                  'hidden',
+              )}
+            >
+              {'!'}
+            </span>
+          </div>
         </div>
       ))}
     </div>
