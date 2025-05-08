@@ -1,13 +1,14 @@
-import "./globals.css";
+import './globals.css';
 
-import type { Metadata } from "next";
-import { GeistSans } from "geist/font/sans";
-import { cn } from "@/lib/utils";
-import { unstable_ViewTransition as ViewTransition } from "react";
+import type { Metadata } from 'next';
+import { GeistSans } from 'geist/font/sans';
+import { GeistMono } from 'geist/font/mono';
+import { cn } from '@/lib/utils';
+import { unstable_ViewTransition as ViewTransition } from 'react';
 
 export const metadata: Metadata = {
-  title: "LockedIn",
-  description: "LockedIn is a resume builder powered by AI",
+  title: 'LockedIn',
+  description: 'LockedIn is a resume builder powered by AI',
 };
 
 export default function RootLayout({
@@ -21,7 +22,8 @@ export default function RootLayout({
         <body
           className={cn(
             GeistSans.variable,
-            "antialiased transition-all bg-gray-a duration-500",
+            GeistMono.variable,
+            'antialiased transition-all bg-gray-a duration-500',
           )}
         >
           {children}

@@ -2,6 +2,7 @@
 import { atom, useAtomValue } from 'jotai';
 import { z } from 'zod';
 import { contactDataAtom } from './contact';
+import { useMemo } from 'react';
 
 export const resumeSchema = z.object({
   id: z.string().uuid().optional(),
@@ -129,4 +130,49 @@ export const useAllAtomPopulated = () => {
     contact.location &&
     contact.fullName
   );
+};
+
+export const useResumeWordCount = () => {
+  const resume = useAtomValue(resumeAtom);
+  const summary = useAtomValue(summaryAtom);
+  const experiences = useAtomValue(experiencesAtom);
+  const educations = useAtomValue(educationsAtom);
+  const skills = useAtomValue(skillsAtom);
+
+  return useMemo(() => {
+    // Helper to count words in a string
+    const countWords = (text?: string) =>
+      text ? text.trim().split(/\s+/).filter(Boolean).length : 0;
+
+    let total = 0;
+
+    // Summary
+    total += countWords(summary?.text);
+
+    // Experiences: count words in all string fields
+    experiences.forEach(exp => {
+      total += countWords(exp.company);
+      total += countWords(exp.position);
+      total += countWords(exp.location);
+      total += countWords(exp.dates);
+      total += countWords(exp.description);
+    });
+
+    // Educations: count words in all string fields
+    educations.forEach(edu => {
+      total += countWords(edu.level);
+      total += countWords(edu.institution);
+      total += countWords(edu.degree);
+      total += countWords(edu.field);
+      total += countWords(edu.location);
+      total += countWords(edu.dates);
+    });
+
+    // Skills: each skill is a string
+    skills.forEach(skill => {
+      total += countWords(skill);
+    });
+
+    return total;
+  }, [resume, summary, experiences, educations, skills]);
 };

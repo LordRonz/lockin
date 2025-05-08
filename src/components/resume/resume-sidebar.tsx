@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 import { useResumeContext } from '@/context/resume-context';
 import ResumeCompletion from './resume-completion';
 import { useAtom, useAtomValue } from 'jotai';
-import { resumeAtom } from '@/lib/store/resume';
+import { resumeAtom, useResumeWordCount } from '@/lib/store/resume';
 import { formatCustomDate } from '@/lib/date';
 import { Divider } from '../ui/divider';
 import { isLocalStorageAtom } from '@/lib/store/isLocalStorage';
@@ -39,6 +39,7 @@ export const ResumeSidebar = () => {
   const resume = useAtomValue(resumeAtom);
   const [isLocalStorage] = useAtom(isLocalStorageAtom);
   const [isPending, startTransition] = useTransition();
+  const totalWordCount = useResumeWordCount();
 
   const handleActionClick = (action: string) => {
     if (action === 'Download') {
@@ -129,10 +130,14 @@ export const ResumeSidebar = () => {
               Info
             </AccordionTrigger>
             <AccordionContent>
-              <div className="text-xs text-center text-gray-500 pt-2">
+              <div className="text-xs font-geist-mono text-center text-gray-500 pt-2">
                 {' '}
                 {/* Added padding top */}
-                Last Edited {formatCustomDate(resume?.updatedAt)}
+                <p>Created: </p>
+                <p>{formatCustomDate(resume?.createdAt)}</p>
+                <p>Last Edited: </p>
+                <p>{formatCustomDate(resume?.updatedAt)}</p>
+                <p>Words: {totalWordCount}</p>
               </div>
             </AccordionContent>
           </AccordionItem>

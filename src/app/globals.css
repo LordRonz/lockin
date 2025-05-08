@@ -95,4 +95,5 @@
 
 @theme {
   --font-primary: var(--font-geist-sans), 'sans-serif';
+  --font-geist-mono: var(--font-geist-mono);
 }
