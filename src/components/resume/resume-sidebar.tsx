@@ -8,7 +8,7 @@ import { useResumeContext } from '@/context/resume-context';
 import ResumeCompletion from './resume-completion';
 import { useAtom, useAtomValue } from 'jotai';
 import { resumeAtom, useResumeWordCount } from '@/lib/store/resume';
-import { formatCustomDate } from '@/lib/date';
+import { format } from 'date-fns';
 import { Divider } from '../ui/divider';
 import { isLocalStorageAtom } from '@/lib/store/isLocalStorage';
 import { deleteResumeAction } from '@/actions/resume';
@@ -30,8 +30,18 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'; // Added Accordion imports
+import { Download, FileText, Trash2 } from 'lucide-react';
 
-const actionItems = ['Download', 'Share', 'Create Cover Letter'];
+const actionItems = [
+  {
+    text: 'Download',
+    icon: Download,
+  },
+  {
+    text: 'Generate Resume',
+    icon: FileText,
+  },
+];
 
 export const ResumeSidebar = () => {
   const { downloadPdf } = useResumeContext();
@@ -63,6 +73,11 @@ export const ResumeSidebar = () => {
     });
   };
 
+  const formatDate = (date: Date | undefined | null) => {
+    if (!date) return 'N/A';
+    return format(new Date(date), 'EEEE HH.mm, dd MMM yyyy');
+  };
+
   return (
     <div className="flex flex-col gap-4 p-4 max-w-xs h-full justify-center items-center">
       <Card className="p-4 space-y-2 rounded-4xl w-full">
@@ -71,18 +86,22 @@ export const ResumeSidebar = () => {
         <Divider />
 
         {/* Action Section */}
-        {actionItems.map((action) => (
-          <Button
-            key={action}
-            variant="ghost"
-            className={cn(
-              'w-full justify-start text-left text-md px-4 py-6 rounded-2xl font-medium hover:bg-white-orange hover:text-orange-a',
-            )}
-            onClick={() => handleActionClick(action)}
-          >
-            {action}
-          </Button>
-        ))}
+        {actionItems.map((action) => {
+          const Icon = action.icon;
+          return (
+            <Button
+              key={action.text}
+              variant="ghost"
+              className={cn(
+                'w-full justify-start text-left text-md px-4 py-6 rounded-2xl font-medium hover:bg-white-orange hover:text-orange-a gap-2',
+              )}
+              onClick={() => handleActionClick(action.text)}
+            >
+              <Icon className="h-5 w-5" />
+              {action.text}
+            </Button>
+          );
+        })}
         <Divider />
         <AlertDialog>
           <AlertDialogTrigger asChild>
@@ -94,6 +113,7 @@ export const ResumeSidebar = () => {
               )}
               disabled={isPending}
             >
+              <Trash2 />
               {'Remove'}
             </Button>
           </AlertDialogTrigger>
@@ -125,18 +145,16 @@ export const ResumeSidebar = () => {
         >
           <AccordionItem value="item-1" className="border-b-0">
             <AccordionTrigger className="py-2 hover:no-underline">
-              {' '}
-              {/* Adjusted padding and hover */}
               Info
             </AccordionTrigger>
             <AccordionContent>
-              <div className="text-xs font-geist-mono text-center text-gray-500 pt-2">
-                {' '}
-                {/* Added padding top */}
+              <div className="text-xs font-geist-mono text-left text-gray-500 pt-2">
                 <p>Created: </p>
-                <p>{formatCustomDate(resume?.createdAt)}</p>
+                <p>{formatDate(resume?.createdAt)}</p>
+                <div className="my-3" />
                 <p>Last Edited: </p>
-                <p>{formatCustomDate(resume?.updatedAt)}</p>
+                <p>{formatDate(resume?.updatedAt)}</p>
+                <Divider className="my-3" />
                 <p>Words: {totalWordCount}</p>
               </div>
             </AccordionContent>
