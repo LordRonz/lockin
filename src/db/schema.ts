@@ -120,11 +120,29 @@ export const templates = pgTable('templates', {
   structure: text('structure').notNull(),
 });
 
+export const resumeVersions = pgTable('resume_versions', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  resumeId: uuid('resume_id')
+    .notNull()
+    .references(() => resumes.id, { onDelete: 'cascade' }),
+  name: varchar('name', { length: 100 }).notNull(),
+  createdAt: timestamp('created_at').defaultNow(),
+  content: text('content').notNull(),
+});
+
+export const resumeVersionsRelation = relations(resumeVersions, ({ one }) => ({
+  resume: one(resumes, {
+    fields: [resumeVersions.resumeId],
+    references: [resumes.id],
+  }),
+}));
+
 export const resumeRelations = relations(resumes, ({ many, one }) => ({
   sections: many(sections),
   experiences: many(experiences),
   educations: many(educations),
   skills: many(skills),
+  versions: many(resumeVersions),
   contact: one(contacts, {
     fields: [resumes.id],
     references: [contacts.resumeId],

@@ -117,11 +117,7 @@ export const useAllAtomPopulated = () => {
     ) &&
     educations.length > 0 &&
     educations.every(
-      (edu) =>
-        edu.institution &&
-        edu.degree &&
-        edu.field &&
-        edu.dates,
+      (edu) => edu.institution && edu.degree && edu.field && edu.dates,
     ) &&
     skills.length > 0 &&
     summary.text.trim().length > 0 &&
@@ -133,7 +129,6 @@ export const useAllAtomPopulated = () => {
 };
 
 export const useResumeWordCount = () => {
-  const resume = useAtomValue(resumeAtom);
   const summary = useAtomValue(summaryAtom);
   const experiences = useAtomValue(experiencesAtom);
   const educations = useAtomValue(educationsAtom);
@@ -150,7 +145,7 @@ export const useResumeWordCount = () => {
     total += countWords(summary?.text);
 
     // Experiences: count words in all string fields
-    experiences.forEach(exp => {
+    experiences.forEach((exp) => {
       total += countWords(exp.company);
       total += countWords(exp.position);
       total += countWords(exp.location);
@@ -159,7 +154,7 @@ export const useResumeWordCount = () => {
     });
 
     // Educations: count words in all string fields
-    educations.forEach(edu => {
+    educations.forEach((edu) => {
       total += countWords(edu.level);
       total += countWords(edu.institution);
       total += countWords(edu.degree);
@@ -169,10 +164,10 @@ export const useResumeWordCount = () => {
     });
 
     // Skills: each skill is a string
-    skills.forEach(skill => {
+    skills.forEach((skill) => {
       total += countWords(skill);
     });
 
     return total;
-  }, [resume, summary, experiences, educations, skills]);
+  }, [summary, experiences, educations, skills]);
 };

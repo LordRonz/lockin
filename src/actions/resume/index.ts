@@ -1,12 +1,13 @@
 'use server';
 
 import { db } from '@/db';
-import { eq } from 'drizzle-orm';
+import { desc, eq } from 'drizzle-orm';
 import {
   contacts,
   educations,
   experiences,
   resumes,
+  resumeVersions,
   skills,
   summary,
 } from '@/db/schema';
@@ -193,3 +194,99 @@ export async function aiEnhanceResumeAction(
 
   return enhanceResume(content, section);
 }
+
+// Create a version
+export const createVersion = async (
+  resumeId: string,
+  name: string,
+  compressedContent: string,
+) => {
+  await db.insert(resumeVersions).values({
+    resumeId,
+    name,
+    content: compressedContent,
+  });
+};
+
+// Get a specific version history
+export const getResumeVersion = async (versionId: string) => {
+  const version = await db.query.resumeVersions.findFirst({
+    where: eq(resumeVersions.id, versionId),
+  });
+
+  if (!version) {
+    throw new Error('Version not found');
+  }
+
+  return version;
+};
+
+// Restore a version
+export const restoreVersion = async (
+  versionId: string,
+  decompressedContent: Awaited<ReturnType<typeof getResumeData>>,
+) => {
+  const version = await db.query.resumeVersions.findFirst({
+    where: eq(resumeVersions.id, versionId),
+  });
+  if (!version || !decompressedContent) {
+    throw new Error('Version not found');
+  }
+
+  const {
+    id: resumeId,
+    experiences: experienceData,
+    educations: educationData,
+    skills: skillData,
+    summary: summaryData,
+    contact: contactData,
+  } = decompressedContent;
+
+  // Update main resume
+  await db
+    .update(resumes)
+    .set({ updatedAt: new Date() })
+    .where(eq(resumes.id, resumeId));
+
+  // Update all sections
+  if (experienceData?.length) {
+    await db.delete(experiences).where(eq(experiences.resumeId, resumeId));
+    await db.insert(experiences).values(experienceData);
+  }
+
+  if (educationData?.length) {
+    await db.delete(educations).where(eq(educations.resumeId, resumeId));
+    await db.insert(educations).values(educationData);
+  }
+
+  if (skillData?.length) {
+    await db.delete(skills).where(eq(skills.resumeId, resumeId));
+    await db.insert(skills).values(skillData);
+  }
+
+  if (summaryData) {
+    await db.delete(summary).where(eq(summary.resumeId, resumeId));
+    await db.insert(summary).values(summaryData);
+  }
+
+  if (contactData) {
+    await db.delete(contacts).where(eq(contacts.resumeId, resumeId));
+    await db.insert(contacts).values(contactData);
+  }
+
+  revalidatePath(`/resume/${resumeId}`);
+};
+
+// Get list of version histories for a resume
+export const getResumeVersionList = async (resumeId: string) => {
+  return db.query.resumeVersions.findMany({
+    where: eq(resumeVersions.resumeId, resumeId),
+    orderBy: (versions) => [desc(versions.createdAt)],
+    columns: {
+      id: true,
+      name: true,
+      createdAt: true,
+      resumeId: true,
+    },
+  });
+};

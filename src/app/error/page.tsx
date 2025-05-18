@@ -1,22 +1,11 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 
-export default function ErrorPage({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string };
-  reset: () => void;
-}) {
+export default function ErrorPage() {
   const router = useRouter();
-
-  useEffect(() => {
-    console.error(error);
-  }, [error]);
 
   return (
     <div className="h-screen w-full flex flex-col items-center justify-center bg-gradient-to-b from-background to-muted">
@@ -37,12 +26,7 @@ export default function ErrorPage({
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Button
-            variant="default"
-            size="lg"
-            onClick={() => reset()}
-            className="min-w-[200px]"
-          >
+          <Button variant="default" size="lg" className="min-w-[200px]">
             Try Again
           </Button>
           <Button
