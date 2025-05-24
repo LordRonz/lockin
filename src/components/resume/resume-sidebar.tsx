@@ -150,12 +150,14 @@ export const ResumeSidebar = () => {
             <AccordionContent>
               <div className="text-xs font-geist-mono text-left text-gray-500 pt-2">
                 <p>Created: </p>
-                <p>{formatDate(resume?.createdAt)}</p>
+                <p className="text-black-a">{formatDate(resume?.createdAt)}</p>
                 <div className="my-3" />
                 <p>Last Edited: </p>
-                <p>{formatDate(resume?.updatedAt)}</p>
+                <p className="text-black-a">{formatDate(resume?.updatedAt)}</p>
                 <Divider className="my-3" />
-                <p>Words: {totalWordCount}</p>
+                <p>
+                  Words: <span className="text-black-a">{totalWordCount}</span>
+                </p>
               </div>
             </AccordionContent>
           </AccordionItem>

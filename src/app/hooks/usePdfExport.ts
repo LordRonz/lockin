@@ -1,6 +1,6 @@
 // components/Resume/usePdfExport.ts
-import { useRef } from "react";
-import jsPDF from "jspdf";
+import { useRef } from 'react';
+import jsPDF from 'jspdf';
 
 export const usePdfExport = () => {
   const resumeRef = useRef<HTMLDivElement>(null);
@@ -8,7 +8,11 @@ export const usePdfExport = () => {
   const downloadPdf = async () => {
     if (!resumeRef.current) return;
 
-    const pdf = new jsPDF("p", "px", "a4");
+    const pdf = new jsPDF({
+      orientation: 'p',
+      unit: 'px',
+      format: 'a4',
+    });
     const pageWidth = pdf.internal.pageSize.getWidth();
 
     await pdf.html(resumeRef.current, {
@@ -19,7 +23,7 @@ export const usePdfExport = () => {
         useCORS: true,
       },
       callback: (doc) => {
-        doc.save("resume.pdf");
+        doc.save('resume.pdf');
       },
       margin: 0,
       windowWidth: resumeRef.current.scrollWidth,

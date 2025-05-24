@@ -1,9 +1,9 @@
-import { cn } from "@/lib/utils";
-import { ReactNode, MouseEvent, RefObject } from "react";
-import { ContactModal } from "./sections/contact-section";
-import React from "react";
-import { contactDataAtom, contactModalOpenAtom } from "@/lib/store/contact";
-import { useAtom } from "jotai";
+import { cn } from '@/lib/utils';
+import { ReactNode, MouseEvent, RefObject } from 'react';
+import { ContactModal } from './sections/contact-section';
+import React from 'react';
+import { contactDataAtom, contactModalOpenAtom } from '@/lib/store/contact';
+import { useAtom } from 'jotai';
 import {
   educationsAtom,
   educationModalOpenAtom,
@@ -13,11 +13,11 @@ import {
   skillsModalOpenAtom,
   summaryAtom,
   summaryModalOpenAtom,
-} from "@/lib/store/resume";
-import { ExperienceModal } from "./sections/experience-modal";
-import { EducationModal } from "./sections/education-modal";
-import { SkillsModal } from "./sections/skills-modal";
-import { SummaryModal } from "./sections/summary-modal";
+} from '@/lib/store/resume';
+import { ExperienceModal } from './sections/experience-modal';
+import { EducationModal } from './sections/education-modal';
+import { SkillsModal } from './sections/skills-modal';
+import { SummaryModal } from './sections/summary-modal';
 
 interface ResumeSectionProps {
   title?: string;
@@ -33,7 +33,7 @@ const ResumeSection = ({ title, children, onClick }: ResumeSectionProps) => (
     tabIndex={0}
     onClick={onClick}
   >
-    <h2 className={cn("text-xl font-semibold mb-4", !title && "hidden")}>
+    <h2 className={cn('text-xl font-semibold mb-4', !title && 'hidden')}>
       {title}
     </h2>
     <div className="space-y-4">{children}</div>
@@ -93,82 +93,84 @@ export const ResumeComponent = ({
   ].filter(Boolean);
 
   return (
-    <div
-      ref={ref}
-      className="max-w-3xl m-0 mx-0 my-0 p-4 bg-white-a border-gray-b border-1 rounded-4xl"
-    >
-      <ResumeSection onClick={() => setContactModalOpen(true)}>
-        <h1 className="text-3xl font-bold mb-2 text-inherit">
-          {contactData.fullName}
-        </h1>
-        <div className="flex flex-wrap items-center gap-x-4">
-          {contactInfo.map((info, index) => (
-            <React.Fragment key={index}>
-              <span>{info}</span>
-              {index < contactInfo.length - 1 && <span className="">·</span>}
-            </React.Fragment>
-          ))}
-        </div>
-      </ResumeSection>
-
-      <ResumeSection title="Summary" onClick={() => setSummaryModalOpen(true)}>
-        <p>{summary.text}</p>
-      </ResumeSection>
-
-      <ResumeSection
-        title="Experience"
-        onClick={() => setExperienceModalOpen(true)}
-      >
-        {experiences.map((exp, index) => (
-          <ExperienceItem
-            key={index}
-            company={exp.company}
-            location={exp.location}
-            position={exp.position}
-            dates={exp.dates}
-          >
-            <ul className="list-disc pl-6 space-y-2">
-              {exp.description.split("\n").map((line, i) => (
-                <li key={i}>{line}</li>
-              ))}
-            </ul>
-          </ExperienceItem>
-        ))}
-      </ResumeSection>
-
-      <ResumeSection title="Skills" onClick={() => setSkillsModalOpen(true)}>
-        <div className="flex flex-wrap gap-4">
-          <span>{skills.join(" | ")}</span>
-        </div>
-      </ResumeSection>
-
-      <ResumeSection
-        title="Education"
-        onClick={() => setEducationModalOpen(true)}
-      >
-        {educations.map((edu, index) => (
-          <div
-            className="flex justify-between items-start"
-            key={edu.institution + index}
-          >
-            <div>
-              <h3 className="font-medium text-inherit">{edu.institution}</h3>
-              <p className="text-inherit">
-                {edu.degree} in {edu.field}
-              </p>
-            </div>
-            <div className="text-right">
-              <p className="text-inherit">{edu.location}</p>
-              <p className="text-sm text-inherit">{edu.dates}</p>
-            </div>
+    <div className="max-w-3xl m-0 mx-0 my-0 bg-white-a border-gray-b border-1 rounded-4xl">
+      <div className="p-4" ref={ref}>
+        <ResumeSection onClick={() => setContactModalOpen(true)}>
+          <h1 className="text-3xl font-bold mb-2 text-inherit">
+            {contactData.fullName}
+          </h1>
+          <div className="flex flex-wrap items-center gap-x-4">
+            {contactInfo.map((info, index) => (
+              <React.Fragment key={index}>
+                <span>{info}</span>
+                {index < contactInfo.length - 1 && <span className="">·</span>}
+              </React.Fragment>
+            ))}
           </div>
-        ))}
-      </ResumeSection>
-      <ContactModal />
-      <ExperienceModal />
-      <EducationModal />
-      <SkillsModal />
-      <SummaryModal />
+        </ResumeSection>
+
+        <ResumeSection
+          title="Summary"
+          onClick={() => setSummaryModalOpen(true)}
+        >
+          <p>{summary.text}</p>
+        </ResumeSection>
+
+        <ResumeSection
+          title="Experience"
+          onClick={() => setExperienceModalOpen(true)}
+        >
+          {experiences.map((exp, index) => (
+            <ExperienceItem
+              key={index}
+              company={exp.company}
+              location={exp.location}
+              position={exp.position}
+              dates={exp.dates}
+            >
+              <ul className="list-disc pl-6 space-y-2">
+                {exp.description.split('\n').map((line, i) => (
+                  <li key={i}>{line}</li>
+                ))}
+              </ul>
+            </ExperienceItem>
+          ))}
+        </ResumeSection>
+
+        <ResumeSection title="Skills" onClick={() => setSkillsModalOpen(true)}>
+          <div className="flex flex-wrap gap-4">
+            <span>{skills.join(' | ')}</span>
+          </div>
+        </ResumeSection>
+
+        <ResumeSection
+          title="Education"
+          onClick={() => setEducationModalOpen(true)}
+        >
+          {educations.map((edu, index) => (
+            <div
+              className="flex justify-between items-start"
+              key={edu.institution + index}
+            >
+              <div>
+                <h3 className="font-medium text-inherit">{edu.institution}</h3>
+                <p className="text-inherit">
+                  {edu.degree} in {edu.field}
+                </p>
+              </div>
+              <div className="text-right">
+                <p className="text-inherit">{edu.location}</p>
+                <p className="text-sm text-inherit">{edu.dates}</p>
+              </div>
+            </div>
+          ))}
+        </ResumeSection>
+        <ContactModal />
+        <ExperienceModal />
+        <EducationModal />
+        <SkillsModal />
+        <SummaryModal />
+      </div>
     </div>
   );
 };

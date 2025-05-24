@@ -2,7 +2,9 @@ import { getResumeData } from '@/actions/resume';
 import BackToResume from '@/components/button/back-to-resume';
 import { ResumeEditor } from '@/components/resume/resume-editor';
 import { ResumeHeader } from '@/components/resume/resume-header';
-import ResumeHydrator, { ResumeData } from '@/components/resume/resume-hydrator';
+import ResumeHydrator, {
+  ResumeData,
+} from '@/components/resume/resume-hydrator';
 import { ResumeJobInput } from '@/components/resume/resume-job-input';
 import { ResumeSidebar } from '@/components/resume/resume-sidebar';
 import { ResumeProvider } from '@/context/resume-context';
@@ -15,7 +17,9 @@ export default async function ResumePage({
 }) {
   const user = await getUser();
   const p = await params;
-  const resume = user ? await getResumeData(p.id) : { id: p.id } as ResumeData;
+  const resume = user
+    ? await getResumeData(p.id)
+    : ({ id: p.id } as ResumeData);
   return (
     <ResumeProvider>
       <div className="container mx-auto max-w-6xl">
