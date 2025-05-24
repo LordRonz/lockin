@@ -130,9 +130,9 @@ export default function NotFound() {
                   Page Not Found
                 </h2>
                 <p className="text-lg text-gray-c max-w-md mx-auto leading-relaxed">
-                  Oops! The page you're looking for seems to have wandered off
-                  into the digital void. Don't worry, even the best explorers
-                  sometimes take a wrong turn.
+                  Oops! The page you{"'"}re looking for seems to have wandered
+                  off into the digital void. Don{"'"}t worry, even the best
+                  explorers sometimes take a wrong turn.
                 </p>
               </motion.div>
 
