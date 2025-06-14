@@ -29,7 +29,7 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from '@/components/ui/accordion'; // Added Accordion imports
+} from '@/components/ui/accordion';
 import { Download, FileText, Trash2 } from 'lucide-react';
 
 const actionItems = [
