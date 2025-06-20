@@ -1,221 +1,195 @@
-// app/page.tsx
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import Link from "next/link";
-import { SVGProps } from "react";
+import React from 'react';
+import { Upload, FileText, Sparkles, ArrowLeft, Download } from 'lucide-react';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-blue-50 w-full">
-      {/* Navigation */}
-      <nav className="w-full max-w-7xl mx-auto px-4 py-6 flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-blue-600">Lockin</h1>
-        <div className="space-x-4">
-          <Button variant="ghost">Features</Button>
-          <Button variant="ghost">Pricing</Button>
-          <Button className="bg-blue-600 hover:bg-blue-700">Get Started</Button>
+    <div className="min-h-screen bg-gray-50">
+      <header className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-sm">👤</span>
+              </div>
+            </div>
+            <nav className="flex space-x-8">
+              <a
+                href="#"
+                className="text-gray-700 hover:text-orange-500 font-medium"
+              >
+                Home
+              </a>
+              <a
+                href="/resume"
+                className="text-gray-700 hover:text-orange-500 font-medium"
+              >
+                CV
+              </a>
+            </nav>
+          </div>
         </div>
-      </nav>
+      </header>
 
-      <main className="w-full">
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Hero Section */}
-        <section className="w-full max-w-7xl mx-auto px-4 py-20 text-center space-y-8">
-          <div className="flex flex-col items-center">
-            <h1 className="text-5xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent max-w-4xl leading-tight">
-              Craft Your Perfect Resume
-              <span className="block mt-4 text-3xl text-gray-600 font-medium">
-                AI-Powered Professional Resume Builder
-              </span>
+        <div className="text-center mb-16">
+          <div className="flex items-center justify-center space-x-2 mb-4">
+            <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold">🔒</span>
+            </div>
+            <h1 className="text-4xl font-bold text-gray-900">
+              Lock<span className="text-orange-500">Innn</span>
             </h1>
-
-            <div className="flex justify-center gap-4 mt-8">
-              <Link href="/resume">
-                <Button
-                  size="lg"
-                  className="bg-blue-600 hover:bg-blue-700 px-8 py-6 text-lg"
-                >
-                  Start Building Free
-                </Button>
-              </Link>
-              <Button size="lg" variant="outline" className="px-8 py-6 text-lg">
-                See Examples
-              </Button>
-            </div>
-
-            {/* Resume Preview */}
-            <div className="mt-16 relative group w-full max-w-4xl mx-auto">
-              <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl opacity-30 blur transition group-hover:opacity-50"></div>
-              <Card className="relative p-8 rounded-2xl shadow-xl transform transition-transform group-hover:scale-[1.02]">
-                <div className="bg-gray-100 h-96 rounded-lg"></div>
-              </Card>
-            </div>
           </div>
-        </section>
+          <p className="text-xl text-gray-600 mb-12">
+            Adapt your CV to any Job Listing
+          </p>
 
-        {/* Features Section */}
-        <section className="w-full bg-white py-20">
-          <div className="max-w-7xl mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-16">
-              Why Choose Lockin?
-            </h2>
-            <div className="grid md:grid-cols-3 gap-8 justify-items-center">
-              {FEATURES.map((feature) => (
-                <Card
-                  key={feature.title}
-                  className="p-6 hover:shadow-lg transition-shadow max-w-sm w-full"
-                >
-                  <feature.icon className="h-8 w-8 text-blue-600 mb-4" />
-                  <h3 className="text-xl font-semibold mb-2">
-                    {feature.title}
-                  </h3>
-                  <p className="text-gray-600">{feature.description}</p>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
 
-        {/* Testimonials */}
-        <section className="w-full max-w-7xl mx-auto px-4 py-20">
-          <h2 className="text-3xl font-bold text-center mb-16">
-            Trusted by Professionals
-          </h2>
-          <div className="grid md:grid-cols-2 gap-8 justify-items-center">
-            {TESTIMONIALS.map((testimonial) => (
-              <Card key={testimonial.name} className="p-8 max-w-md w-full">
-                <p className="text-gray-600 mb-4">
-                  {'"'}
-                  {testimonial.text}
-                  {'"'}
-                </p>
-                <div className="flex items-center gap-4">
-                  <div className="h-12 w-12 rounded-full bg-gray-100"></div>
-                  <div>
-                    <p className="font-semibold">{testimonial.name}</p>
-                    <p className="text-gray-500">{testimonial.role}</p>
-                  </div>
+          <div className="max-w-2xl mx-auto">
+            <div className="border-2 border-dashed border-orange-300 rounded-lg p-12 bg-orange-50 mb-8">
+              <div className="flex flex-col items-center">
+                <div className="w-16 h-16 bg-orange-500 rounded-lg flex items-center justify-center mb-4">
+                  <FileText className="w-8 h-8 text-white" />
                 </div>
-              </Card>
-            ))}
+                <p className="text-gray-600 mb-6">Drag and drop your CV here</p>
+                <div className="flex space-x-4">
+                  <button className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors flex items-center space-x-2">
+                    <Upload className="w-4 h-4" />
+                    <span>Browse Files</span>
+                  </button>
+                  <button className="px-6 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors flex items-center space-x-2">
+                    <Sparkles className="w-4 h-4" />
+                    <span>Start from Scratch</span>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
-        </section>
+        </div>
 
-        {/* CTA */}
-        <section className="w-full max-w-7xl mx-auto px-4 py-20 text-center">
-          <h2 className="text-3xl font-bold mb-8">
-            Ready to Land Your Dream Job?
+
+        <div className="mb-16">
+          <h2 className="text-2xl font-bold text-center text-gray-900 mb-12">
+            Our Features
           </h2>
-          <Button
-            size="lg"
-            className="bg-blue-600 hover:bg-blue-700 px-12 py-8 text-xl"
-          >
-            Create Your Resume Now
-          </Button>
-        </section>
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="text-center p-6 rounded-lg bg-white shadow-sm">
+              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <FileText className="w-6 h-6 text-orange-500" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Adapt CV to Job Listing
+              </h3>
+              <p className="text-gray-600">
+                Automatically customize your CV to match specific job
+                requirements and keywords.
+              </p>
+            </div>
+            <div className="text-center p-6 rounded-lg bg-white shadow-sm">
+              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <Sparkles className="w-6 h-6 text-orange-500" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Enhance CV
+              </h3>
+              <p className="text-gray-600">
+                Improve your CV with professional formatting and content
+                optimization.
+              </p>
+            </div>
+            <div className="text-center p-6 rounded-lg bg-white shadow-sm">
+              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <FileText className="w-6 h-6 text-orange-500" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Generate Resume
+              </h3>
+              <p className="text-gray-600">
+                Create professional resumes from scratch with our intelligent
+                templates.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* CV Preview Section */}
+        <div className="bg-white rounded-lg shadow-lg p-8 mb-16">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center space-x-3">
+              <button className="flex items-center space-x-2 text-gray-600 hover:text-gray-900">
+                <ArrowLeft className="w-4 h-4" />
+                <span>CV UI/UX Designer Gojek - Maret</span>
+              </button>
+            </div>
+            <button className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors flex items-center space-x-2">
+              <Download className="w-4 h-4" />
+              <span>Download PDF</span>
+            </button>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            <div>
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Unspecified Bird
+                  </h3>
+                  <p className="text-gray-600">
+                    UI/UX Designer at Your Dream City Java
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-medium text-gray-900 mb-2">Summary</h4>
+                  <div className="h-20 bg-gray-100 rounded"></div>
+                </div>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <h4 className="font-medium text-gray-900 mb-2">
+                  Work Experience
+                </h4>
+                <div className="space-y-2">
+                  <p className="text-sm text-gray-600">
+                    Friday 17 Jul, 26 Jul 2024
+                  </p>
+                  <div className="h-4 bg-gray-100 rounded"></div>
+                  <p className="text-sm text-gray-600">Last Update</p>
+                  <p className="text-sm text-gray-600">
+                    Sat, 26 Jul - 7 Aug 2025
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </main>
 
-      <footer className="border-t w-full">
-        <div className="max-w-7xl mx-auto px-4 py-8 text-center text-gray-600">
-          © {new Date().getFullYear()} Lockin. All rights reserved.
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid md:grid-cols-2 gap-8">
+            <div>
+              <p className="text-gray-400 mb-4">
+                Designed by Ashiee Tagnan Racharel
+              </p>
+              <p className="text-gray-400">
+                Developed by Aaron Christopher Tannar
+              </p>
+            </div>
+            <div>
+              <h4 className="text-lg font-medium mb-4">
+                Get in contact with us!
+              </h4>
+            </div>
+          </div>
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center">
+            <p className="text-gray-400">LockIn 2025</p>
+          </div>
         </div>
       </footer>
     </div>
-  );
-}
-
-// ... keep the same FEATURES, TESTIMONIALS, and icon components as before
-
-const FEATURES = [
-  {
-    title: "AI-Powered Suggestions",
-    description:
-      "Get intelligent content recommendations tailored to your industry",
-    icon: SparklesIcon,
-  },
-  {
-    title: "Real-Time Preview",
-    description: "See your resume come to life as you build it",
-    icon: EyeIcon,
-  },
-  {
-    title: "ATS Optimization",
-    description: "Ensure your resume passes through applicant tracking systems",
-    icon: ShieldCheckIcon,
-  },
-];
-
-const TESTIMONIALS = [
-  {
-    name: "Sarah Johnson",
-    role: "Marketing Director",
-    text: "Lockin helped me create a resume that got me 3 interview offers in the first week!",
-  },
-  {
-    name: "Michael Chen",
-    role: "Software Engineer",
-    text: "The ATS optimization feature is a game-changer. Finally landed my dream job!",
-  },
-];
-
-// Icons (you can use any icon library)
-function SparklesIcon(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={1.5}
-      stroke="currentColor"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"
-      />
-    </svg>
-  );
-}
-
-function EyeIcon(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={1.5}
-      stroke="currentColor"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
-      />
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-      />
-    </svg>
-  );
-}
-
-function ShieldCheckIcon(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={1.5}
-      stroke="currentColor"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
-      />
-    </svg>
   );
 }
