@@ -1,5 +1,6 @@
 import React from 'react';
 import { Upload, FileText, Sparkles, ArrowLeft, Download } from 'lucide-react';
+import Link from 'next/link';
 
 export default function Home() {
   return (
@@ -19,12 +20,12 @@ export default function Home() {
               >
                 Home
               </a>
-              <a
+              <Link
                 href="/resume"
                 className="text-gray-700 hover:text-orange-500 font-medium"
               >
                 CV
-              </a>
+              </Link>
             </nav>
           </div>
         </div>
@@ -45,7 +46,6 @@ export default function Home() {
           <p className="text-xl text-gray-600 mb-12">
             Adapt your CV to any Job Listing
           </p>
-
 
           <div className="max-w-2xl mx-auto">
             <div className="border-2 border-dashed border-orange-300 rounded-lg p-12 bg-orange-50 mb-8">
@@ -68,7 +68,6 @@ export default function Home() {
             </div>
           </div>
         </div>
-
 
         <div className="mb-16">
           <h2 className="text-2xl font-bold text-center text-gray-900 mb-12">
