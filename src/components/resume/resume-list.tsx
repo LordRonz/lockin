@@ -1,12 +1,14 @@
 'use client';
 
-import React, { useTransition, useEffect, useState } from 'react';
+import React, { useEffect, useState, useTransition } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Plus } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Search, UploadCloud } from 'lucide-react';
 import { createResumeAction } from '@/actions/resume';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { nanoid } from 'nanoid/non-secure';
+import Link from 'next/link';
 
 export default function ResumeListPage({
   resumes,
@@ -24,7 +26,6 @@ export default function ResumeListPage({
 }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-
   const [localResumes, setLocalResumes] = useState<typeof resumes>([]);
 
   useEffect(() => {
@@ -32,8 +33,6 @@ export default function ResumeListPage({
       const stored = localStorage.getItem('resumes');
       if (stored) {
         setLocalResumes(JSON.parse(stored));
-      } else {
-        setLocalResumes([]);
       }
     }
   }, [useLocalStorage]);
@@ -51,10 +50,8 @@ export default function ResumeListPage({
           updatedAt: now,
           templateId: null,
         };
-        // Get current resumes from localStorage
         const stored = localStorage.getItem('resumes');
         const resumesArr = stored ? JSON.parse(stored) : [];
-
         resumesArr.push(newResume);
         localStorage.setItem('resumes', JSON.stringify(resumesArr));
         setLocalResumes(resumesArr);
@@ -69,33 +66,108 @@ export default function ResumeListPage({
   const displayResumes = useLocalStorage ? localResumes : resumes;
 
   return (
-    <div className="p-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 bg-gray-50 justify-start auto-rows-fr">
-      {displayResumes.map((resume, index) => (
-        <Card key={index} className="cursor-pointer hover:shadow-lg">
-          <CardContent className="p-4 flex flex-col items-center">
-            <Link
-              href={`resume/${resume.id}`}
-              className="w-full h-48 bg-white border rounded-lg p-4 flex items-center justify-center"
-            >
-              <p className="text-sm font-semibold text-gray-700 text-center">
-                {resume.title}
-              </p>
-            </Link>
-          </CardContent>
-        </Card>
-      ))}
-      <Card className="cursor-pointer hover:shadow-lg bg-gradient-to-r from-orange-300 to-orange-500 flex items-center justify-center">
-        <CardContent className="p-4 flex flex-col items-center">
-          <button
-            className="w-full h-48 flex flex-col items-center justify-center text-white"
-            onClick={() => onCreateResume()}
-            disabled={isPending}
+    <div className="p-6 max-w-6xl mx-auto space-y-10">
+      <h2 className="text-3xl font-bold text-gray-800">Your CVs</h2>
+
+      {/* Upload Area */}
+      <div className="border-2 border-dashed border-orange-300 rounded-xl bg-orange-50 flex flex-col items-center justify-center py-12 gap-4 text-orange-500">
+        <UploadCloud size={40} />
+        <p className="text-sm font-semibold">Drag and drop your CV here</p>
+        <div className="flex gap-4 mt-2">
+          <Button variant="outline">Browse Files</Button>
+          <Button onClick={onCreateResume} disabled={isPending}>
+            Start from Scratch
+          </Button>
+        </div>
+      </div>
+
+      {/* Search Bar */}
+      <div className="flex items-center gap-2">
+        <Input placeholder="Search your CV here" className="max-w-sm" />
+        <Button variant="ghost" size="icon">
+          <Search />
+        </Button>
+      </div>
+
+      {/* Starred CVs */}
+      <div>
+        <h3 className="text-lg font-semibold text-orange-500 mb-4">
+          Starred CVs
+        </h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {displayResumes.slice(0, 4).map((resume) => (
+            <Card key={resume.id}>
+              <CardContent className="p-4">
+                <Link href={`resume/${resume.id}`}>
+                  <p className="font-medium text-gray-800 truncate">
+                    {resume.title}
+                  </p>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Created: {new Date(resume.createdAt || '').toLocaleString()}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Last Edited:{' '}
+                    {new Date(resume.updatedAt || '').toLocaleString()}
+                  </p>
+                </Link>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {/* History */}
+      <div>
+        <h3 className="text-lg font-semibold text-orange-500 mb-2">History</h3>
+        <div className="space-y-6">
+          <HistoryGroup title="Today" items={displayResumes.slice(0, 2)} />
+          <HistoryGroup
+            title="Previous 30 Days"
+            items={displayResumes.slice(2, 6)}
+          />
+          <HistoryGroup title="Earlier" items={displayResumes.slice(6)} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function HistoryGroup({
+  title,
+  items,
+}: {
+  title: string;
+  items: {
+    id: string;
+    title: string | null;
+    createdAt: Date | string | null;
+    updatedAt: Date | string | null;
+  }[];
+}) {
+  if (!items.length) return null;
+  return (
+    <div>
+      <h4 className="text-sm font-semibold text-gray-700 mb-2">{title}</h4>
+      <div className="grid gap-2">
+        {items.map((resume) => (
+          <div
+            key={resume.id}
+            className="flex justify-between items-center p-3 rounded-md bg-white shadow-sm border text-sm"
           >
-            <Plus size={32} />
-            <p className="mt-2 font-semibold">Add New Resume</p>
-          </button>
-        </CardContent>
-      </Card>
+            <div>
+              <p className="font-medium text-gray-800">{resume.title}</p>
+              <p className="text-xs text-gray-500">
+                Opened: {new Date(resume.updatedAt || '').toLocaleString()}
+              </p>
+            </div>
+            <div className="text-right">
+              <p className="text-xs text-gray-400">
+                Created: {new Date(resume.createdAt || '').toLocaleString()}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

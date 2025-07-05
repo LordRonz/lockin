@@ -1,10 +1,18 @@
+'use client';
 import React from 'react';
 import { Upload, FileText, Sparkles, ArrowLeft, Download } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import Logo from '@/public/logo.svg'
+import Logo from '@/public/logo.svg';
+import { nanoid } from 'nanoid';
 
 export default function Home() {
+  const handlePdfUpload = async (file: File) => {
+    const reader = new FileReader();
+    reader.onload = async () => {};
+    reader.readAsArrayBuffer(file);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white shadow-sm">
@@ -55,11 +63,51 @@ export default function Home() {
                 </div>
                 <p className="text-gray-600 mb-6">Drag and drop your CV here</p>
                 <div className="flex space-x-4">
-                  <button className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors flex items-center space-x-2">
-                    <Upload className="w-4 h-4" />
-                    <span>Browse Files</span>
-                  </button>
-                  <button className="px-6 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors flex items-center space-x-2">
+                  <div className="relative">
+                    <input
+                      type="file"
+                      id="pdf-upload"
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      accept=".pdf"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          handlePdfUpload(file);
+                        }
+                      }}
+                    />
+                    <label
+                      htmlFor="pdf-upload"
+                      className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors flex items-center space-x-2 cursor-pointer"
+                    >
+                      <Upload className="w-4 h-4" />
+                      <span>Browse Files</span>
+                    </label>
+                  </div>
+                  <button
+                    className="px-6 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors flex items-center space-x-2"
+                    onClick={() => {
+                      const id = nanoid();
+                      const now = new Date().toISOString();
+                      const newResume = {
+                        id,
+                        title: 'Untitled Resume',
+                        userId: '',
+                        createdAt: now,
+                        updatedAt: now,
+                        templateId: null,
+                        content: '', // Empty content for new resume
+                      };
+                      const stored = localStorage.getItem('resumes');
+                      const resumesArr = stored ? JSON.parse(stored) : [];
+                      resumesArr.push(newResume);
+                      localStorage.setItem(
+                        'resumes',
+                        JSON.stringify(resumesArr),
+                      );
+                      window.location.href = `/resume/${id}`;
+                    }}
+                  >
                     <Sparkles className="w-4 h-4" />
                     <span>Start from Scratch</span>
                   </button>
