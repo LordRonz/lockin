@@ -6,9 +6,10 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search, UploadCloud } from 'lucide-react';
 import { createResumeAction } from '@/actions/resume';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { nanoid } from 'nanoid/non-secure';
 import Link from 'next/link';
+import { toast } from 'sonner';
 
 export default function ResumeListPage({
   resumes,
@@ -28,6 +29,11 @@ export default function ResumeListPage({
   const [isPending, startTransition] = useTransition();
   const [localResumes, setLocalResumes] = useState<typeof resumes>([]);
 
+  const [isMounted, setIsMounted] = useState(false);
+  const [isToastShown, setIsToastShown] = useState(false);
+
+  const searchParams = useSearchParams();
+
   useEffect(() => {
     if (useLocalStorage) {
       const stored = localStorage.getItem('resumes');
@@ -36,6 +42,27 @@ export default function ResumeListPage({
       }
     }
   }, [useLocalStorage]);
+
+  useEffect(() => {
+    if (isMounted && router && searchParams && !isToastShown) {
+      const toastMessage = searchParams.get('toast');
+      if (!toastMessage) return;
+      toast.success(toastMessage, {
+        duration: 5000,
+      });
+
+      const params = new URLSearchParams(Array.from(searchParams.entries()));
+      params.delete('toast');
+
+      const newUrl =
+        window.location.pathname +
+        (params.toString() ? `?${params.toString()}` : '');
+
+      router.replace(newUrl, { scroll: false });
+      setIsToastShown(true);
+    }
+    setIsMounted(true);
+  }, [searchParams, isMounted, router, isToastShown]);
 
   const onCreateResume = () => {
     startTransition(async () => {

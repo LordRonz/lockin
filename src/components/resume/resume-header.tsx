@@ -43,6 +43,7 @@ export function ResumeHeader() {
   return (
     <>
       <div className="fixed inset-0 -z-10 bg-gradient-to-br from-purple-50 via-white to-blue-50" />
+      <div className="h-20" />
 
       <header
         className={cn(

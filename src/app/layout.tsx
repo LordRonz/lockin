@@ -4,7 +4,8 @@ import type { Metadata } from 'next';
 import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
 import { cn } from '@/lib/utils';
-import { unstable_ViewTransition as ViewTransition } from 'react';
+import { Suspense, unstable_ViewTransition as ViewTransition } from 'react';
+import { Toaster } from '@/components/ui/sonner';
 
 export const metadata: Metadata = {
   title: 'LockedIn',
@@ -26,7 +27,10 @@ export default function RootLayout({
             'antialiased transition-all bg-gray-a duration-500',
           )}
         >
-          {children}
+          <Suspense>
+            {children}
+            <Toaster />
+          </Suspense>
         </body>
       </html>
     </ViewTransition>
