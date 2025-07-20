@@ -92,7 +92,7 @@ export function SkillsModal() {
       if (error instanceof z.ZodError) {
         form.setError('skillsInput', {
           type: 'manual',
-          message: error.errors.map((err) => err.message).join(', '),
+          message: error.message,
         });
       }
     }
