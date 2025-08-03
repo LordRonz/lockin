@@ -1,8 +1,19 @@
 import { type NextConfig } from 'next';
 import path from 'path';
+
+import 'dotenv/config';
+
 const nextConfig: NextConfig = {
   experimental: {
     viewTransition: true,
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/upload-tmp',
+        destination: `${process.env.FILE_UPLOAD_URL}`,
+      },
+    ];
   },
   turbopack: {
     resolveAlias: {

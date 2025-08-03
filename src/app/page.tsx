@@ -5,12 +5,34 @@ import Link from 'next/link';
 import Image from 'next/image';
 import Logo from '@/public/logo.svg';
 import { nanoid } from 'nanoid';
+import { parseResumeAction } from './task/parse-resume';
 
 export default function Home() {
   const handlePdfUpload = async (file: File) => {
-    const reader = new FileReader();
-    reader.onload = async () => {};
-    reader.readAsArrayBuffer(file);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await fetch('/upload-tmp', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Upload failed with status ${response.status}`);
+      }
+
+      const result: { data: { url: string }; status: string } =
+        await response.json();
+      const fileUrl =
+        'https://tmpfiles.org/dl' +
+        result.data.url.replace('http://tmpfiles.org', '');
+
+      const parseHandle = await parseResumeAction(fileUrl);
+      console.log(parseHandle);
+    } catch (error) {
+      console.error('Error uploading file:', error);
+    }
   };
 
   return (
