@@ -6,6 +6,7 @@ import {
   integer,
   boolean,
   varchar,
+  jsonb,
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
@@ -16,6 +17,7 @@ export const resumes = pgTable('resumes', {
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
   templateId: text('template_id'),
+  parseResult: jsonb('parse_result'),
 });
 
 export const contacts = pgTable('contacts', {
