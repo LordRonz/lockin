@@ -1,7 +1,10 @@
+import { db } from '@/db';
+import { resumes } from '@/db/schema';
 import { logger, task } from '@trigger.dev/sdk/v3';
 
 type ParseResumeTaskPayload = {
   url: string;
+  userId: string;
 };
 
 export const parseResumeTask = task({
@@ -183,6 +186,8 @@ export const parseResumeTask = task({
 
     const parseResponse = await fetch(url, options);
     const parseResult = await parseResponse.json();
+
+    await db.insert(resumes).values({ userId: payload.userId, parseResult });
 
     return parseResult;
   },
